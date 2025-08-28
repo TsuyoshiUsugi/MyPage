@@ -11,10 +11,25 @@ interface PlaylistItem {
 let playlistData: PlaylistItem[] = [];
 
 try {
-  // プレイリストデータを取得（GitHub Actionsで生成される）
-  const response = await fetch('/MyPage/data/playlist.json');
-  if (response.ok) {
-    playlistData = await response.json();
+  // 開発環境とプロダクション環境の判定
+  const isDev = import.meta.env.DEV;
+  
+  if (isDev) {
+    // 開発環境：ローカルファイルから読み込み
+    const fs = await import('fs');
+    const path = await import('path');
+    const filePath = path.join(process.cwd(), 'public', 'data', 'playlist.json');
+    
+    if (fs.existsSync(filePath)) {
+      const fileContent = fs.readFileSync(filePath, 'utf-8');
+      playlistData = JSON.parse(fileContent);
+    }
+  } else {
+    // プロダクション環境：HTTPリクエスト
+    const response = await fetch('/MyPage/data/playlist.json');
+    if (response.ok) {
+      playlistData = await response.json();
+    }
   }
 } catch (error) {
   console.error('プレイリストの取得に失敗:', error);
