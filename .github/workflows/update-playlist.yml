@@ -24,9 +24,9 @@ jobs:
       
       - name: Create playlist update script
         run: |
-          cat > update-playlist.js << 'EOF'
-          const fs = require('fs');
-          const path = require('path');
+          cat > update-playlist.mjs << 'EOF'
+          import fs from 'fs';
+          import path from 'path';
           
           const API_KEY = process.env.YOUTUBE_API_KEY;
           const PLAYLIST_ID = process.env.YOUTUBE_PLAYLIST_ID;
@@ -95,7 +95,7 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           YOUTUBE_PLAYLIST_ID: ${{ secrets.YOUTUBE_PLAYLIST_ID }}
-        run: node update-playlist.js
+        run: node update-playlist.mjs
       
       - name: Check for changes
         id: verify-changed-files
