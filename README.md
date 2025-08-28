@@ -103,19 +103,3 @@ tags: ["tag1", "tag2"]
 1. `public/CNAME` ファイルにドメインを記載
 2. DNS設定でGitHub PagesのIPアドレスを指定
 
-## 📊 パフォーマンス
-
-- Lighthouse モバイルスコア 80+ を目標
-- 画像の遅延読み込み実装
-- OGP対応済み
-
-## 🔧 主要コンポーネント
-
-- **BaseLayout**: 共通レイアウト（ヘッダー・フッター）
-- **PostCard**: ブログ記事カード
-- **NowPlaylist**: YouTube プレイリスト表示
-- **GameEmbed**: Unity WebGL ゲーム埋め込み
-
-## 📄 ライセンス
-
-このプロジェクトはMITライセンスのもとで公開されています。
