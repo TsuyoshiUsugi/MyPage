@@ -1,0 +1,585 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GameEmbed from '../../components/GameEmbed.astro';
+---
+
+<BaseLayout 
+  title="Unity WebGL Game - Works - TsuyoshiUsugi Portfolio" 
+  description="Unity WebGLで制作したブラウザゲームの詳細ページです。ゲームの仕様や技術的な実装について紹介しています。"
+>
+  <div class="work-detail">
+    <!-- ブレッドクラム -->
+    <nav class="breadcrumb">
+      <a href="/">Home</a>
+      <span class="separator">›</span>
+      <a href="/works">Works</a>
+      <span class="separator">›</span>
+      <span class="current">Unity WebGL Game</span>
+    </nav>
+    
+    <!-- プロジェクトヘッダー -->
+    <header class="project-header">
+      <div class="project-meta">
+        <span class="project-category">Unity Game</span>
+        <span class="project-status">開発中</span>
+      </div>
+      <h1 class="project-title">Unity WebGL Game</h1>
+      <p class="project-description">
+        Unityで制作したブラウザで動作するWebGLゲーム。
+        シンプルな操作で楽しめるアクションゲームです。
+      </p>
+      
+      <div class="project-tech">
+        <h3>使用技術</h3>
+        <div class="tech-list">
+          <span class="tech-tag">Unity 2022.3 LTS</span>
+          <span class="tech-tag">C#</span>
+          <span class="tech-tag">WebGL</span>
+          <span class="tech-tag">HTML5 Audio</span>
+        </div>
+      </div>
+    </header>
+    
+    <!-- ゲーム埋め込み -->
+    <section class="game-section">
+      <h2>ゲームをプレイ</h2>
+      <div class="game-notice">
+        <p>⚠️ このサンプルページではゲームファイルは配置されていません。</p>
+        <p>実際の運用時は <code>/public/works/sample/</code> にUnity WebGLビルドファイルを配置します。</p>
+      </div>
+      
+      <!-- 実際のゲーム埋め込み（ファイルが存在する場合） -->
+      <GameEmbed 
+        title="Unity WebGL Game"
+        gameUrl="/works/sample/index.html"
+        description="矢印キーまたはWASDで移動、スペースキーでジャンプ"
+      />
+    </section>
+    
+    <!-- プロジェクト詳細 -->
+    <section class="project-details">
+      <div class="details-grid">
+        <!-- 概要 -->
+        <div class="detail-card">
+          <h3>プロジェクト概要</h3>
+          <ul>
+            <li><strong>ジャンル:</strong> 2Dアクションゲーム</li>
+            <li><strong>プレイ時間:</strong> 約5-10分</li>
+            <li><strong>対象:</strong> 全年齢</li>
+            <li><strong>プラットフォーム:</strong> WebGL（ブラウザ）</li>
+          </ul>
+        </div>
+        
+        <!-- ゲーム機能 -->
+        <div class="detail-card">
+          <h3>実装機能</h3>
+          <ul>
+            <li>プレイヤーキャラクターの移動・ジャンプ</li>
+            <li>障害物との当たり判定</li>
+            <li>スコアシステム</li>
+            <li>サウンドエフェクト</li>
+            <li>レスポンシブな画面サイズ対応</li>
+          </ul>
+        </div>
+        
+        <!-- 技術的な工夫 -->
+        <div class="detail-card">
+          <h3>技術的な工夫</h3>
+          <ul>
+            <li>WebGL最適化でファイルサイズ削減</li>
+            <li>Decompression Fallback有効化</li>
+            <li>モバイル端末でのタッチ操作対応</li>
+            <li>ブラウザ互換性の確保</li>
+          </ul>
+        </div>
+        
+        <!-- 開発期間・チーム -->
+        <div class="detail-card">
+          <h3>開発情報</h3>
+          <ul>
+            <li><strong>開発期間:</strong> 2週間</li>
+            <li><strong>チーム構成:</strong> 個人開発</li>
+            <li><strong>役割:</strong> 企画・プログラミング・デザイン</li>
+            <li><strong>開発環境:</strong> Unity 2022.3 LTS, Visual Studio</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 開発プロセス -->
+    <section class="development-process">
+      <h2>開発プロセス</h2>
+      <div class="process-timeline">
+        <div class="process-item">
+          <div class="process-step">1</div>
+          <div class="process-content">
+            <h4>企画・コンセプト決定</h4>
+            <p>シンプルで直感的な操作のアクションゲームというコンセプトを決定。WebGLでの動作を前提とした軽量な設計を検討。</p>
+          </div>
+        </div>
+        
+        <div class="process-item">
+          <div class="process-step">2</div>
+          <div class="process-content">
+            <h4>プロトタイプ開発</h4>
+            <p>基本的なプレイヤー移動とジャンプ機能を実装。物理演算とUI要素の基本設計を完成。</p>
+          </div>
+        </div>
+        
+        <div class="process-item">
+          <div class="process-step">3</div>
+          <div class="process-content">
+            <h4>ゲームロジック実装</h4>
+            <p>障害物システム、スコア管理、ゲームオーバー処理などの核となるゲームロジックを実装。</p>
+          </div>
+        </div>
+        
+        <div class="process-item">
+          <div class="process-step">4</div>
+          <div class="process-content">
+            <h4>WebGL最適化・テスト</h4>
+            <p>WebGL向けの最適化を実施し、各種ブラウザでの動作テストとパフォーマンス調整を実施。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 学んだこと・課題 -->
+    <section class="lessons-learned">
+      <div class="lessons-grid">
+        <div class="lesson-card">
+          <h3>学んだこと</h3>
+          <ul>
+            <li>WebGL向けの最適化技術</li>
+            <li>ブラウザ間の互換性対応</li>
+            <li>軽量なゲーム設計の重要性</li>
+            <li>ユーザビリティを考慮したUI設計</li>
+          </ul>
+        </div>
+        
+        <div class="lesson-card">
+          <h3>今後の改善点</h3>
+          <ul>
+            <li>より複雑なレベルデザイン</li>
+            <li>プレイヤーデータの永続化</li>
+            <li>モバイル操作の更なる改善</li>
+            <li>サウンドデザインの充実</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    
+    <!-- プロジェクトリンク -->
+    <section class="project-links">
+      <h2>プロジェクトリンク</h2>
+      <div class="links-grid">
+        <a href="#" class="project-link disabled">
+          <span class="link-icon">🎮</span>
+          <div class="link-content">
+            <h4>ゲームをプレイ</h4>
+            <p>ブラウザで直接ゲームをプレイ（準備中）</p>
+          </div>
+        </a>
+        
+        <a href="#" class="project-link disabled">
+          <span class="link-icon">📱</span>
+          <div class="link-content">
+            <h4>GitHub Repository</h4>
+            <p>ソースコードと開発ドキュメント（準備中）</p>
+          </div>
+        </a>
+      </div>
+    </section>
+    
+    <!-- ナビゲーション -->
+    <nav class="project-navigation">
+      <a href="/works" class="nav-link">
+        ← Works一覧に戻る
+      </a>
+    </nav>
+  </div>
+</BaseLayout>
+
+<style>
+  .work-detail {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  /* ブレッドクラム */
+  .breadcrumb {
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+  
+  .breadcrumb a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+  
+  .separator {
+    margin: 0 0.5rem;
+  }
+  
+  .current {
+    color: var(--text-primary);
+  }
+  
+  /* プロジェクトヘッダー */
+  .project-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .project-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .project-category {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  
+  .project-status {
+    background: rgba(138, 180, 248, 0.1);
+    color: var(--accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+  }
+  
+  .project-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .project-description {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+  
+  .project-tech h3 {
+    font-size: 1.125rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+  }
+  
+  .tech-list {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .tech-tag {
+    background: rgba(138, 180, 248, 0.1);
+    color: var(--accent);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  /* ゲームセクション */
+  .game-section {
+    margin: 3rem 0;
+  }
+  
+  .game-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  
+  .game-notice {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .game-notice p {
+    margin: 0.5rem 0;
+    color: #ffc107;
+  }
+  
+  .game-notice code {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+  
+  /* プロジェクト詳細 */
+  .project-details {
+    margin: 3rem 0;
+  }
+  
+  .details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+  
+  .detail-card {
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .detail-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  
+  .detail-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .detail-card li {
+    padding: 0.5rem 0;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .detail-card li:last-child {
+    border-bottom: none;
+  }
+  
+  .detail-card strong {
+    color: var(--text-primary);
+  }
+  
+  /* 開発プロセス */
+  .development-process {
+    margin: 3rem 0;
+  }
+  
+  .development-process h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: var(--accent);
+  }
+  
+  .process-timeline {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .process-timeline::before {
+    content: '';
+    position: absolute;
+    left: 2rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  
+  .process-item {
+    position: relative;
+    margin-bottom: 2rem;
+    padding-left: 5rem;
+  }
+  
+  .process-step {
+    position: absolute;
+    left: 1.25rem;
+    top: 0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  
+  .process-content h4 {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+  
+  .process-content p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  
+  /* 学んだこと */
+  .lessons-learned {
+    margin: 3rem 0;
+  }
+  
+  .lessons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .lesson-card {
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .lesson-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  
+  .lesson-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .lesson-card li {
+    padding: 0.5rem 0;
+    color: var(--text-secondary);
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  
+  .lesson-card li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+  }
+  
+  /* プロジェクトリンク */
+  .project-links {
+    margin: 3rem 0;
+  }
+  
+  .project-links h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: var(--accent);
+  }
+  
+  .links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .project-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+  }
+  
+  .project-link:not(.disabled):hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+  }
+  
+  .project-link.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .link-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+  
+  .link-content h4 {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+  
+  .link-content p {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  /* プロジェクトナビゲーション */
+  .project-navigation {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  
+  .nav-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: opacity 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    opacity: 0.8;
+  }
+  
+  /* レスポンシブ */
+  @media (max-width: 768px) {
+    .project-title {
+      font-size: 2rem;
+    }
+    
+    .project-description {
+      font-size: 1rem;
+    }
+    
+    .details-grid,
+    .lessons-grid,
+    .links-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .tech-list {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .process-timeline::before {
+      left: 1.5rem;
+    }
+    
+    .process-item {
+      padding-left: 4rem;
+    }
+    
+    .process-step {
+      left: 0.75rem;
+    }
+    
+    .project-links h2,
+    .development-process h2 {
+      font-size: 1.5rem;
+    }
+  }
+</style>

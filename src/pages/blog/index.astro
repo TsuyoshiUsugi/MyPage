@@ -1,0 +1,242 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+// ブログ記事を取得してソート
+const allPosts = await getCollection('blog');
+const sortedPosts = allPosts.sort(
+  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
+);
+
+// タグの一覧を取得
+const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sort();
+---
+
+<BaseLayout 
+  title="Blog - TsuyoshiUsugi Portfolio" 
+  description="技術ブログ記事の一覧です。プログラミング、Web開発、ゲーム開発などについて書いています。"
+>
+  <div class="blog-container">
+    <header class="page-header">
+      <h1>Tech Blog</h1>
+      <p class="page-subtitle">技術学習の記録とアウトプット</p>
+    </header>
+    
+    <!-- タグフィルター -->
+    {allTags.length > 0 && (
+      <section class="tags-section">
+        <h2 class="tags-title">Tags</h2>
+        <div class="tags-list">
+          <button class="tag-btn active" data-tag="all">All</button>
+          {allTags.map(tag => (
+            <button class="tag-btn" data-tag={tag}>{tag}</button>
+          ))}
+        </div>
+      </section>
+    )}
+    
+    <!-- 記事一覧 -->
+    <section class="posts-section">
+      {sortedPosts.length > 0 ? (
+        <div class="posts-grid">
+          {sortedPosts.map((post) => (
+            <PostCard
+              title={post.data.title}
+              description={post.data.description}
+              pubDate={post.data.pubDate}
+              slug={post.slug}
+              tags={post.data.tags}
+            />
+          ))}
+        </div>
+      ) : (
+        <div class="empty-state">
+          <div class="empty-icon">📝</div>
+          <h3>記事がまだありません</h3>
+          <p>近日中に技術記事を公開予定です。お楽しみに！</p>
+        </div>
+      )}
+    </section>
+    
+    <!-- AdSense プレースホルダー -->
+    {sortedPosts.length > 3 && (
+      <div class="adsense-slot">
+        <p>広告エリア（AdSense設定後に表示）</p>
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .page-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  
+  .page-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+  }
+  
+  /* タグセクション */
+  .tags-section {
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .tags-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .tags-list {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  
+  .tag-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+  }
+  
+  .tag-btn:hover,
+  .tag-btn.active {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+  }
+  
+  /* 記事セクション */
+  .posts-section {
+    margin-bottom: 3rem;
+  }
+  
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+  
+  /* 空の状態 */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    margin: 2rem 0;
+  }
+  
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+  }
+  
+  .empty-state p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+  }
+  
+  /* レスポンシブ */
+  @media (max-width: 768px) {
+    .page-header h1 {
+      font-size: 2rem;
+    }
+    
+    .posts-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .tags-list {
+      gap: 0.5rem;
+    }
+    
+    .tag-btn {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+    }
+    
+    .empty-state {
+      padding: 3rem 1rem;
+    }
+    
+    .empty-icon {
+      font-size: 3rem;
+    }
+    
+    .empty-state h3 {
+      font-size: 1.25rem;
+    }
+    
+    .empty-state p {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<script>
+  // タグフィルター機能
+  document.addEventListener('DOMContentLoaded', () => {
+    const tagButtons = document.querySelectorAll('.tag-btn');
+    const postCards = document.querySelectorAll('[data-tags]');
+    
+    // データ属性をpostCardに追加する処理は、PostCardコンポーネントで実装される必要がある
+    // ここでは基本的なフィルター機能の骨組みを提供
+    
+    tagButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // アクティブボタンの切り替え
+        tagButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        const selectedTag = button.getAttribute('data-tag');
+        
+        // カードのフィルタリング処理
+        postCards.forEach(card => {
+          if (selectedTag === 'all') {
+            card.style.display = 'block';
+          } else {
+            const cardTags = card.getAttribute('data-tags')?.split(',') || [];
+            if (cardTags.includes(selectedTag)) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          }
+        });
+      });
+    });
+  });
+</script>

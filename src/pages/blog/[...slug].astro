@@ -1,0 +1,420 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection('blog');
+  return blogEntries.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const { title, description, pubDate, tags, ogImage } = entry.data;
+
+const formattedDate = pubDate.toLocaleDateString('ja-JP', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+---
+
+<BaseLayout 
+  title={`${title} - TsuyoshiUsugi Portfolio`}
+  description={description}
+  ogImage={ogImage}
+>
+  <article class="blog-post">
+    <!-- 記事ヘッダー -->
+    <header class="post-header">
+      <nav class="breadcrumb">
+        <a href="/MyPage/">Home</a>
+        <span class="separator">›</span>
+        <a href="/MyPage/blog">Blog</a>
+        <span class="separator">›</span>
+        <span class="current">{title}</span>
+      </nav>
+      
+      <div class="post-meta">
+        <time datetime={pubDate.toISOString()} class="post-date">
+          {formattedDate}
+        </time>
+        {tags && tags.length > 0 && (
+          <div class="post-tags">
+            {tags.map(tag => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        )}
+      </div>
+      
+      <h1 class="post-title">{title}</h1>
+      {description && (
+        <p class="post-description">{description}</p>
+      )}
+    </header>
+    
+    <!-- AdSense プレースホルダー -->
+    <div class="adsense-slot">
+      <p>広告エリア（AdSense設定後に表示）</p>
+    </div>
+    
+    <!-- 記事本文 -->
+    <div class="post-content">
+      <Content />
+    </div>
+    
+    <!-- 記事フッター -->
+    <footer class="post-footer">
+      <div class="post-navigation">
+        <a href="/MyPage/blog" class="back-to-blog">
+          ← ブログ一覧に戻る
+        </a>
+      </div>
+      
+      <div class="share-section">
+        <h3>この記事をシェア</h3>
+        <div class="share-buttons">
+          <a 
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(Astro.url.toString())}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="share-btn twitter"
+          >
+            Twitter
+          </a>
+          <a 
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.toString())}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="share-btn facebook"
+          >
+            Facebook
+          </a>
+          <button 
+            class="share-btn copy"
+            onclick="copyToClipboard()"
+            data-url={Astro.url.toString()}
+          >
+            URLをコピー
+          </button>
+        </div>
+      </div>
+    </footer>
+    
+    <!-- 関連記事（将来的に実装） -->
+    <aside class="related-posts">
+      <h3>関連記事</h3>
+      <p class="coming-soon">関連記事の表示機能は近日実装予定です</p>
+    </aside>
+  </article>
+</BaseLayout>
+
+<style>
+  .blog-post {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  /* ブレッドクラム */
+  .breadcrumb {
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+  
+  .breadcrumb a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+  
+  .separator {
+    margin: 0 0.5rem;
+  }
+  
+  .current {
+    color: var(--text-primary);
+  }
+  
+  /* 記事ヘッダー */
+  .post-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .post-date {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  .post-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .tag {
+    background: var(--accent);
+    color: var(--bg-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .post-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .post-description {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  
+  /* 記事本文 */
+  .post-content {
+    line-height: 1.8;
+    color: var(--text-primary);
+    margin: 3rem 0;
+  }
+  
+  /* Markdown スタイル */
+  .post-content :global(h1),
+  .post-content :global(h2),
+  .post-content :global(h3),
+  .post-content :global(h4),
+  .post-content :global(h5),
+  .post-content :global(h6) {
+    margin: 2rem 0 1rem 0;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  
+  .post-content :global(h1) { font-size: 2rem; }
+  .post-content :global(h2) { font-size: 1.75rem; color: var(--accent); }
+  .post-content :global(h3) { font-size: 1.5rem; }
+  .post-content :global(h4) { font-size: 1.25rem; }
+  
+  .post-content :global(p) {
+    margin: 1.5rem 0;
+  }
+  
+  .post-content :global(ul),
+  .post-content :global(ol) {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+  }
+  
+  .post-content :global(li) {
+    margin: 0.5rem 0;
+  }
+  
+  .post-content :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  
+  .post-content :global(a:hover) {
+    opacity: 0.8;
+  }
+  
+  .post-content :global(code) {
+    background: var(--border);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+    font-size: 0.9em;
+  }
+  
+  .post-content :global(pre) {
+    background: var(--border);
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 2rem 0;
+  }
+  
+  .post-content :global(pre code) {
+    background: none;
+    padding: 0;
+  }
+  
+  .post-content :global(blockquote) {
+    border-left: 4px solid var(--accent);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+  
+  .post-content :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 2rem 0;
+  }
+  
+  /* 記事フッター */
+  .post-footer {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  
+  .post-navigation {
+    margin-bottom: 2rem;
+  }
+  
+  .back-to-blog {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: opacity 0.3s ease;
+  }
+  
+  .back-to-blog:hover {
+    opacity: 0.8;
+  }
+  
+  .share-section {
+    margin: 2rem 0;
+  }
+  
+  .share-section h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .share-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .share-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .share-btn:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+  }
+  
+  /* 関連記事 */
+  .related-posts {
+    margin-top: 3rem;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .related-posts h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  
+  .coming-soon {
+    color: var(--text-secondary);
+    font-style: italic;
+  }
+  
+  /* レスポンシブ */
+  @media (max-width: 768px) {
+    .post-title {
+      font-size: 2rem;
+    }
+    
+    .post-description {
+      font-size: 1rem;
+    }
+    
+    .post-meta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .share-buttons {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .share-btn {
+      text-align: center;
+    }
+    
+    .post-content :global(pre) {
+      margin: 2rem -1rem;
+      border-radius: 0;
+    }
+  }
+</style>
+
+<script>
+  function copyToClipboard() {
+    const button = document.querySelector('.share-btn.copy');
+    const url = button?.getAttribute('data-url');
+    
+    if (url) {
+      navigator.clipboard.writeText(url).then(() => {
+        const originalText = button.textContent;
+        button.textContent = 'コピーしました！';
+        
+        setTimeout(() => {
+          button.textContent = originalText;
+        }, 2000);
+      }).catch(err => {
+        console.error('URLのコピーに失敗しました:', err);
+      });
+    }
+  }
+  
+  // ページ読み込み時にスムーズスクロールを設定
+  document.addEventListener('DOMContentLoaded', () => {
+    // 記事内のアンカーリンクに対するスムーズスクロール
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  });
+</script>

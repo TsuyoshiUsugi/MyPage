@@ -1,0 +1,448 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="About - TsuyoshiUsugi Portfolio" 
+  description="TsuyoshiUsugiのプロフィール、経歴、スキル、興味のある技術などを紹介しています。"
+>
+  <div class="about-container">
+    <header class="page-header">
+      <h1>About Me</h1>
+      <p class="page-subtitle">エンジニア・開発者として学び続ける日々</p>
+    </header>
+    
+    <div class="content-grid">
+      <!-- プロフィール -->
+      <section class="profile-card">
+        <div class="avatar">
+          <span class="avatar-placeholder">👨‍💻</span>
+        </div>
+        <div class="profile-info">
+          <h2>TsuyoshiUsugi</h2>
+          <p class="role">Software Engineer</p>
+          <div class="social-links">
+            <a href="https://github.com/TsuyoshiUsugi" target="_blank" rel="noopener noreferrer">
+              GitHub
+            </a>
+            <!-- その他のSNSリンクを追加予定 -->
+          </div>
+        </div>
+      </section>
+      
+      <!-- スキル -->
+      <section class="skills-section">
+        <h2>Skills & Technologies</h2>
+        <div class="skills-grid">
+          <div class="skill-category">
+            <h3>Frontend</h3>
+            <ul>
+              <li>HTML/CSS</li>
+              <li>JavaScript/TypeScript</li>
+              <li>React</li>
+              <li>Next.js</li>
+              <li>Astro</li>
+            </ul>
+          </div>
+          
+          <div class="skill-category">
+            <h3>Backend</h3>
+            <ul>
+              <li>Node.js</li>
+              <li>Python</li>
+              <li>REST API</li>
+              <li>Database Design</li>
+            </ul>
+          </div>
+          
+          <div class="skill-category">
+            <h3>Game Development</h3>
+            <ul>
+              <li>Unity</li>
+              <li>C#</li>
+              <li>WebGL</li>
+              <li>Game Design</li>
+            </ul>
+          </div>
+          
+          <div class="skill-category">
+            <h3>Tools & Others</h3>
+            <ul>
+              <li>Git/GitHub</li>
+              <li>Docker</li>
+              <li>GitHub Actions</li>
+              <li>Web Performance</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+    
+    <!-- 経歴・経験 -->
+    <section class="experience-section">
+      <h2>Experience & Learning</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h3>継続的な学習</h3>
+            <p class="timeline-date">現在</p>
+            <p>新しい技術やフレームワークを学び、実践的なプロジェクトに取り組んでいます。特にWebパフォーマンスの最適化やモダンなフロントエンド開発に興味があります。</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h3>プロジェクト開発</h3>
+            <p class="timeline-date">継続中</p>
+            <p>個人プロジェクトとして、Webアプリケーションやゲーム開発に取り組んでいます。このポートフォリオサイトもその一つです。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- 興味・関心 -->
+    <section class="interests-section">
+      <h2>Interests</h2>
+      <div class="interests-grid">
+        <div class="interest-card">
+          <div class="interest-icon">🌐</div>
+          <h3>Web Technologies</h3>
+          <p>モダンなWeb開発技術、パフォーマンス最適化、ユーザーエクスペリエンスの向上に興味があります。</p>
+        </div>
+        
+        <div class="interest-card">
+          <div class="interest-icon">🎮</div>
+          <h3>Game Development</h3>
+          <p>Unityを使ったゲーム開発、特にWebGLでブラウザ上で動作するゲームの制作に取り組んでいます。</p>
+        </div>
+        
+        <div class="interest-card">
+          <div class="interest-icon">🎵</div>
+          <h3>Music</h3>
+          <p>様々なジャンルの音楽を聴くことが好きです。作業中のBGMとしてプレイリストを共有しています。</p>
+        </div>
+        
+        <div class="interest-card">
+          <div class="interest-icon">📚</div>
+          <h3>Learning</h3>
+          <p>新しい技術の学習、技術書の読書、オンラインコースでのスキルアップを続けています。</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- お問い合わせ -->
+    <section class="contact-section">
+      <h2>Get in Touch</h2>
+      <p>プロジェクトのご相談や技術的な交流など、お気軽にお声がけください。</p>
+      <div class="contact-methods">
+        <a href="https://github.com/TsuyoshiUsugi" class="contact-link" target="_blank" rel="noopener noreferrer">
+          <span class="contact-icon">📱</span>
+          GitHub
+        </a>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .about-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .page-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  
+  .page-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+  }
+  
+  .content-grid {
+    display: grid;
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  /* プロフィールカード */
+  .profile-card {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .avatar {
+    flex-shrink: 0;
+  }
+  
+  .avatar-placeholder {
+    display: block;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+  }
+  
+  .profile-info h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .role {
+    color: var(--accent);
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+  }
+  
+  .social-links {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .social-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .social-links a:hover {
+    color: var(--accent);
+  }
+  
+  /* スキルセクション */
+  .skills-section {
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .skills-section h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+  
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .skill-category h3 {
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+  }
+  
+  .skill-category ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .skill-category li {
+    padding: 0.25rem 0;
+    color: var(--text-secondary);
+  }
+  
+  /* 経歴セクション */
+  .experience-section {
+    margin: 3rem 0;
+  }
+  
+  .experience-section h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.75rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+  }
+  
+  .timeline-item {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+  
+  .timeline-marker {
+    position: absolute;
+    left: -2rem;
+    top: 0.5rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg-primary);
+  }
+  
+  .timeline-content h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .timeline-date {
+    color: var(--accent);
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .timeline-content p:last-child {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  
+  /* 興味・関心セクション */
+  .interests-section {
+    margin: 3rem 0;
+  }
+  
+  .interests-section h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .interests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .interest-card {
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+    text-align: center;
+    transition: transform 0.3s ease;
+  }
+  
+  .interest-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .interest-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .interest-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    color: var(--accent);
+  }
+  
+  .interest-card p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  
+  /* お問い合わせセクション */
+  .contact-section {
+    text-align: center;
+    margin: 3rem 0;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .contact-section h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .contact-section p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  
+  .contact-methods {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+  }
+  
+  .contact-link:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+  }
+  
+  .contact-icon {
+    font-size: 1.25rem;
+  }
+  
+  /* レスポンシブ */
+  @media (max-width: 768px) {
+    .page-header h1 {
+      font-size: 2rem;
+    }
+    
+    .profile-card {
+      flex-direction: column;
+      text-align: center;
+      padding: 1.5rem;
+    }
+    
+    .skills-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .interests-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .timeline {
+      padding-left: 1.5rem;
+    }
+    
+    .timeline-marker {
+      left: -1.5rem;
+    }
+  }
+</style>

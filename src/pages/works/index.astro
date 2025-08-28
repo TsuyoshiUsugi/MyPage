@@ -1,0 +1,424 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout 
+  title="Works - TsuyoshiUsugi Portfolio" 
+  description="制作した作品やプロジェクトの紹介ページです。WebアプリケーションやUnityゲームなどを掲載しています。"
+>
+  <div class="works-container">
+    <header class="page-header">
+      <h1>Works</h1>
+      <p class="page-subtitle">制作した作品・プロジェクト</p>
+    </header>
+    
+    <!-- フィルター -->
+    <section class="filter-section">
+      <h2 class="filter-title">Category</h2>
+      <div class="filter-buttons">
+        <button class="filter-btn active" data-category="all">All</button>
+        <button class="filter-btn" data-category="web">Web App</button>
+        <button class="filter-btn" data-category="game">Game</button>
+        <button class="filter-btn" data-category="other">Other</button>
+      </div>
+    </section>
+    
+    <!-- 作品一覧 -->
+    <section class="works-grid">
+      <!-- Unity WebGL ゲーム (サンプル) -->
+      <article class="work-card" data-category="game">
+        <div class="work-image">
+          <div class="image-placeholder">
+            <span class="placeholder-icon">🎮</span>
+          </div>
+        </div>
+        <div class="work-content">
+          <div class="work-meta">
+            <span class="work-category">Unity Game</span>
+            <span class="work-date">Coming Soon</span>
+          </div>
+          <h3 class="work-title">Unity WebGL Game</h3>
+          <p class="work-description">
+            Unityで制作したブラウザで遊べるWebGLゲーム。
+            シンプルなゲームプレイと直感的な操作性を重視した作品です。
+          </p>
+          <div class="work-tech">
+            <span class="tech-tag">Unity</span>
+            <span class="tech-tag">C#</span>
+            <span class="tech-tag">WebGL</span>
+          </div>
+          <div class="work-actions">
+            <a href="/works/sample" class="btn-primary">詳細を見る</a>
+            <button class="btn-secondary" disabled>準備中</button>
+          </div>
+        </div>
+      </article>
+      
+      <!-- このポートフォリオサイト -->
+      <article class="work-card" data-category="web">
+        <div class="work-image">
+          <div class="image-placeholder">
+            <span class="placeholder-icon">🎨</span>
+          </div>
+        </div>
+        <div class="work-content">
+          <div class="work-meta">
+            <span class="work-category">Portfolio</span>
+            <span class="work-date">2025</span>
+          </div>
+          <h3 class="work-title">Portfolio Site</h3>
+          <p class="work-description">
+            Astroで制作したこのポートフォリオサイト。
+            静的サイト生成とGitHub Pagesでの自動デプロイを実装。
+          </p>
+          <div class="work-tech">
+            <span class="tech-tag">Astro</span>
+            <span class="tech-tag">TypeScript</span>
+            <span class="tech-tag">GitHub Actions</span>
+          </div>
+          <div class="work-actions">
+            <a href="https://github.com/TsuyoshiUsugi/MyPage" class="btn-primary" target="_blank" rel="noopener noreferrer">
+              GitHub
+            </a>
+          </div>
+        </div>
+      </article>
+    </section>
+    
+    <!-- 空の状態（フィルター適用時） -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+      <div class="empty-icon">🔍</div>
+      <h3>該当する作品がありません</h3>
+      <p>別のカテゴリをお試しください</p>
+    </div>
+    
+    <!-- AdSense プレースホルダー -->
+    <div class="adsense-slot">
+      <p>広告エリア（AdSense設定後に表示）</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .works-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  
+  .page-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--accent);
+  }
+  
+  .page-subtitle {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+  }
+  
+  /* フィルター */
+  .filter-section {
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .filter-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .filter-buttons {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  
+  .filter-btn {
+    padding: 0.5rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 25px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+  }
+  
+  .filter-btn:hover,
+  .filter-btn.active {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+  }
+  
+  /* 作品グリッド */
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+  
+  .work-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+    transition: all 0.3s ease;
+  }
+  
+  .work-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 32px rgba(138, 180, 248, 0.1);
+  }
+  
+  .work-image {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+  
+  .image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease;
+  }
+  
+  .work-card:hover .image-placeholder {
+    background: var(--accent);
+  }
+  
+  .placeholder-icon {
+    font-size: 3rem;
+    opacity: 0.7;
+  }
+  
+  .work-content {
+    padding: 1.5rem;
+  }
+  
+  .work-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .work-category {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  
+  .work-date {
+    color: var(--text-secondary);
+  }
+  
+  .work-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+  }
+  
+  .work-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  .work-tech {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  
+  .tech-tag {
+    background: rgba(138, 180, 248, 0.1);
+    color: var(--accent);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .work-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 1px solid;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+  }
+  
+  .btn-primary:hover:not(:disabled) {
+    background: transparent;
+    color: var(--accent);
+  }
+  
+  .btn-secondary {
+    background: transparent;
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--accent);
+    color: var(--bg-primary);
+  }
+  
+  .btn-primary:disabled,
+  .btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* 空の状態 */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    margin: 2rem 0;
+  }
+  
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+  
+  .empty-state h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+  }
+  
+  .empty-state p {
+    color: var(--text-secondary);
+    font-size: 1.125rem;
+  }
+  
+  /* レスポンシブ */
+  @media (max-width: 768px) {
+    .page-header h1 {
+      font-size: 2rem;
+    }
+    
+    .works-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .filter-buttons {
+      gap: 0.5rem;
+    }
+    
+    .filter-btn {
+      font-size: 0.8rem;
+      padding: 0.4rem 1rem;
+    }
+    
+    .work-content {
+      padding: 1.25rem;
+    }
+    
+    .work-actions {
+      flex-direction: column;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+      text-align: center;
+    }
+    
+    .empty-state {
+      padding: 3rem 1rem;
+    }
+    
+    .empty-icon {
+      font-size: 3rem;
+    }
+    
+    .empty-state h3 {
+      font-size: 1.25rem;
+    }
+    
+    .empty-state p {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const workCards = document.querySelectorAll('.work-card');
+    const emptyState = document.getElementById('emptyState');
+    
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // アクティブボタンの切り替え
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        const selectedCategory = button.getAttribute('data-category');
+        let visibleCards = 0;
+        
+        workCards.forEach(card => {
+          const cardCategory = card.getAttribute('data-category');
+          
+          if (selectedCategory === 'all' || cardCategory === selectedCategory) {
+            card.style.display = 'block';
+            visibleCards++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        
+        // 空の状態の表示/非表示
+        if (emptyState) {
+          if (visibleCards === 0) {
+            emptyState.style.display = 'block';
+          } else {
+            emptyState.style.display = 'none';
+          }
+        }
+      });
+    });
+  });
+</script>

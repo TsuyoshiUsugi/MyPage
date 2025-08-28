@@ -1,0 +1,120 @@
+name: Update YouTube Playlist
+
+on:
+  schedule:
+    # 30分ごとに実行
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    # 手動実行も可能
+
+jobs:
+  update-playlist:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Create playlist update script
+        run: |
+          cat > update-playlist.js << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          
+          const API_KEY = process.env.YOUTUBE_API_KEY;
+          const PLAYLIST_ID = process.env.YOUTUBE_PLAYLIST_ID;
+          
+          if (!API_KEY || !PLAYLIST_ID) {
+            console.error('API_KEY or PLAYLIST_ID is not set');
+            process.exit(1);
+          }
+          
+          const API_URL = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
+          
+          async function updatePlaylist() {
+            try {
+              console.log('Fetching playlist data...');
+              const response = await fetch(API_URL);
+              const data = await response.json();
+              
+              if (!response.ok) {
+                console.error('API Error:', data);
+                process.exit(1);
+              }
+              
+              const playlistItems = data.items.map(item => ({
+                id: item.id,
+                title: item.snippet.title,
+                channelTitle: item.snippet.channelTitle,
+                thumbnail: item.snippet.thumbnails.medium.url,
+                publishedAt: item.snippet.publishedAt,
+                videoId: item.snippet.resourceId.videoId
+              }));
+              
+              // publicディレクトリが存在しない場合は作成
+              const publicDir = path.join(process.cwd(), 'public');
+              const dataDir = path.join(publicDir, 'data');
+              
+              if (!fs.existsSync(publicDir)) {
+                fs.mkdirSync(publicDir, { recursive: true });
+              }
+              
+              if (!fs.existsSync(dataDir)) {
+                fs.mkdirSync(dataDir, { recursive: true });
+              }
+              
+              // プレイリストデータをJSONファイルに保存
+              const outputPath = path.join(dataDir, 'playlist.json');
+              fs.writeFileSync(outputPath, JSON.stringify(playlistItems, null, 2));
+              
+              console.log(`Playlist data updated successfully. ${playlistItems.length} items saved.`);
+              console.log('Saved to:', outputPath);
+              
+              // 更新されたファイルの内容を確認用に出力
+              playlistItems.forEach((item, index) => {
+                console.log(`${index + 1}. ${item.title} by ${item.channelTitle}`);
+              });
+              
+            } catch (error) {
+              console.error('Error updating playlist:', error);
+              process.exit(1);
+            }
+          }
+          
+          updatePlaylist();
+          EOF
+      
+      - name: Run playlist update
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YOUTUBE_PLAYLIST_ID: ${{ secrets.YOUTUBE_PLAYLIST_ID }}
+        run: node update-playlist.js
+      
+      - name: Check for changes
+        id: verify-changed-files
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit and push changes
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add public/data/playlist.json
+          git commit -m "Update YouTube playlist data [automated]" || exit 0
+          git push
+      
+      - name: No changes detected
+        if: steps.verify-changed-files.outputs.changed == 'false'
+        run: echo "No changes in playlist data detected."

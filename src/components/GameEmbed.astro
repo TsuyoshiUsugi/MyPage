@@ -1,0 +1,175 @@
+---
+export interface Props {
+  title: string;
+  gameUrl: string;
+  width?: string;
+  height?: string;
+  description?: string;
+}
+
+const { 
+  title, 
+  gameUrl, 
+  width = "100%", 
+  height = "600px",
+  description 
+} = Astro.props;
+---
+
+<div class="game-embed">
+  <div class="game-header">
+    <h2 class="game-title">{title}</h2>
+    {description && <p class="game-description">{description}</p>}
+  </div>
+  
+  <div class="game-container">
+    <iframe 
+      src={gameUrl}
+      width={width}
+      height={height}
+      frameborder="0"
+      allowfullscreen
+      title={title}
+      loading="lazy"
+      class="game-frame"
+    ></iframe>
+  </div>
+  
+  <div class="game-controls">
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">
+      全画面で表示
+    </button>
+    <a href={gameUrl} target="_blank" rel="noopener noreferrer" class="external-link">
+      新しいタブで開く
+    </a>
+  </div>
+</div>
+
+<style>
+  .game-embed {
+    margin: 2rem 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .game-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .game-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+  }
+  
+  .game-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  
+  .game-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+  }
+  
+  .game-frame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+  
+  .game-controls {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .fullscreen-btn,
+  .external-link {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  
+  .fullscreen-btn:hover,
+  .external-link:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+  }
+  
+  .external-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .external-link::after {
+    content: "↗";
+    font-size: 0.75rem;
+  }
+  
+  @media (max-width: 768px) {
+    .game-embed {
+      margin: 1rem -1rem;
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+    }
+    
+    .game-header,
+    .game-controls {
+      padding: 1rem;
+    }
+    
+    .game-controls {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .fullscreen-btn,
+    .external-link {
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  function toggleFullscreen() {
+    const gameContainer = document.querySelector('.game-container');
+    const iframe = gameContainer?.querySelector('iframe');
+    
+    if (!iframe) return;
+    
+    if (!document.fullscreenElement) {
+      gameContainer.requestFullscreen().catch(err => {
+        console.error(`フルスクリーンに失敗: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  }
+  
+  // フルスクリーン状態の変更を監視
+  document.addEventListener('fullscreenchange', () => {
+    const btn = document.querySelector('.fullscreen-btn');
+    if (btn) {
+      btn.textContent = document.fullscreenElement ? '全画面を終了' : '全画面で表示';
+    }
+  });
+</script>

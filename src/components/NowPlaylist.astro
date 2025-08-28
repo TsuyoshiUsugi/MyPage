@@ -1,0 +1,179 @@
+---
+interface PlaylistItem {
+  id: string;
+  title: string;
+  channelTitle: string;
+  thumbnail: string;
+  publishedAt: string;
+  videoId: string;
+}
+
+let playlistData: PlaylistItem[] = [];
+
+try {
+  // プレイリストデータを取得（GitHub Actionsで生成される）
+  const response = await fetch('/MyPage/data/playlist.json');
+  if (response.ok) {
+    playlistData = await response.json();
+  }
+} catch (error) {
+  console.error('プレイリストの取得に失敗:', error);
+}
+---
+
+<section class="now-playlist">
+  <div class="section-header">
+    <h2>Now Listening 🎵</h2>
+    <p>最近よく聴いている音楽です</p>
+  </div>
+  
+  {playlistData.length > 0 ? (
+    <div class="playlist-grid">
+      {playlistData.slice(0, 5).map((item) => (
+        <article class="playlist-item">
+          <a 
+            href={`https://www.youtube.com/watch?v=${item.videoId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="playlist-link"
+          >
+            <div class="thumbnail">
+              <img 
+                src={item.thumbnail} 
+                alt={item.title}
+                loading="lazy"
+                width="320"
+                height="180"
+              />
+            </div>
+            <div class="item-content">
+              <h3 class="item-title">{item.title}</h3>
+              <p class="item-channel">{item.channelTitle}</p>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+  ) : (
+    <div class="playlist-loading">
+      <p>プレイリストを読み込み中...</p>
+    </div>
+  )}
+</section>
+
+<style>
+  .now-playlist {
+    margin: 3rem 0;
+  }
+  
+  .section-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .section-header h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+  }
+  
+  .section-header p {
+    color: var(--text-secondary);
+  }
+  
+  .playlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .playlist-item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .playlist-item:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 32px rgba(138, 180, 248, 0.1);
+  }
+  
+  .playlist-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .thumbnail {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .playlist-item:hover .thumbnail img {
+    transform: scale(1.05);
+  }
+  
+  .item-content {
+    padding: 1rem;
+  }
+  
+  .item-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .item-channel {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  .playlist-loading {
+    text-align: center;
+    padding: 3rem 0;
+    color: var(--text-secondary);
+  }
+  
+  @media (max-width: 768px) {
+    .playlist-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .section-header h2 {
+      font-size: 1.5rem;
+    }
+  }
+</style>
+
+<script>
+  // クライアントサイドでプレイリストデータを再取得
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      const response = await fetch('/MyPage/data/playlist.json');
+      if (response.ok) {
+        const data = await response.json();
+        // プレイリストが空の場合の処理は既にHTMLに含まれている
+      }
+    } catch (error) {
+      console.error('プレイリストの取得に失敗:', error);
+    }
+  });
+</script>
