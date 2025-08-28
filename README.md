@@ -1,4 +1,4 @@
-# TsuyoshiUsugi Portfolio
+# モルモ Portfolio
 
 Astroで構築されたポートフォリオサイトです。技術ブログ、作品紹介、音楽プレイリストなどを掲載しています。
 
