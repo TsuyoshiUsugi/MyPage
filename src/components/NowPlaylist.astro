@@ -26,7 +26,8 @@ try {
     }
   } else {
     // プロダクション環境：HTTPリクエスト
-    const response = await fetch('/MyPage/data/playlist.json');
+    const baseUrl = import.meta.env.BASE_URL || '';
+    const response = await fetch(`${baseUrl}data/playlist.json`);
     if (response.ok) {
       playlistData = await response.json();
     }
@@ -178,11 +179,11 @@ try {
   }
 </style>
 
-<script>
+<script define:vars={{ baseUrl: import.meta.env.BASE_URL || '' }}>
   // クライアントサイドでプレイリストデータを再取得
   document.addEventListener('DOMContentLoaded', async () => {
     try {
-      const response = await fetch('/MyPage/data/playlist.json');
+      const response = await fetch(`${baseUrl}data/playlist.json`);
       if (response.ok) {
         const data = await response.json();
         // プレイリストが空の場合の処理は既にHTMLに含まれている
