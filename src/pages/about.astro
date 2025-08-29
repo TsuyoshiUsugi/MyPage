@@ -16,11 +16,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <!-- プロフィール -->
       <section class="profile-card">
         <div class="avatar">
-          <span class="avatar-placeholder">👨‍💻</span>
+          <img src="/assets/profile-icon.png" alt="プロフィール画像" class="avatar-image" />
         </div>
         <div class="profile-info">
           <h2>モルモ</h2>
-          <p class="role">Software Engineer</p>
+          <p class="role">ゲームクライアントエンジニア</p>
           <div class="social-links">
             <a href="https://github.com/TsuyoshiUsugi" target="_blank" rel="noopener noreferrer">
               GitHub
@@ -35,27 +35,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <h2>Skills & Technologies</h2>
         <div class="skills-grid">
           <div class="skill-category">
-            <h3>Frontend</h3>
-            <ul>
-              <li>HTML/CSS</li>
-              <li>JavaScript/TypeScript</li>
-              <li>React</li>
-              <li>Next.js</li>
-              <li>Astro</li>
-            </ul>
-          </div>
-          
-          <div class="skill-category">
-            <h3>Backend</h3>
-            <ul>
-              <li>Node.js</li>
-              <li>Python</li>
-              <li>REST API</li>
-              <li>Database Design</li>
-            </ul>
-          </div>
-          
-          <div class="skill-category">
             <h3>Game Development</h3>
             <ul>
               <li>Unity</li>
@@ -66,12 +45,29 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </div>
           
           <div class="skill-category">
-            <h3>Tools & Others</h3>
+            <h3>Development Tools</h3>
             <ul>
+              <li>SourceTree</li>
+              <li>VisualStudio2022</li>
+              <li>Rider</li>
               <li>Git/GitHub</li>
+            </ul>
+          </div>
+          
+          <div class="skill-category">
+            <h3>Design & Documentation</h3>
+            <ul>
+              <li>Figma</li>
+              <li>Notion</li>
+            </ul>
+          </div>
+          
+          <div class="skill-category">
+            <h3>Others</h3>
+            <ul>
               <li>Docker</li>
-              <li>GitHub Actions</li>
-              <li>Web Performance</li>
+              <li>HTML/CSS</li>
+              <li>JavaScript/TypeScript</li>
             </ul>
           </div>
         </div>
@@ -85,18 +81,31 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <div class="timeline-item">
           <div class="timeline-marker"></div>
           <div class="timeline-content">
-            <h3>継続的な学習</h3>
+            <h3>株式会社Astran</h3>
             <p class="timeline-date">現在</p>
-            <p>新しい技術やフレームワークを学び、実践的なプロジェクトに取り組んでいます。特にWebパフォーマンスの最適化やモダンなフロントエンド開発に興味があります。</p>
+            <p>クライアントエンジニアとしてゲーム開発に従事しています。</p>
           </div>
         </div>
         
         <div class="timeline-item">
           <div class="timeline-marker"></div>
           <div class="timeline-content">
-            <h3>プロジェクト開発</h3>
-            <p class="timeline-date">継続中</p>
-            <p>個人プロジェクトとして、Webアプリケーションやゲーム開発に取り組んでいます。このポートフォリオサイトもその一つです。</p>
+            <h3>専門学校での学習</h3>
+            <p class="timeline-date">卒業</p>
+            <p>UnityとC#プログラミングを学び、17以上のゲームプロジェクトを制作しました。学内外のコンテストで以下の受賞歴があります：</p>
+            <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+              <li>アクワイア協賛学内ゲームジャム優勝</li>
+              <li>サイバーエージェント主催プロトスプリントリーグ優勝</li>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-marker"></div>
+          <div class="timeline-content">
+            <h3>CATechLounge</h3>
+            <p class="timeline-date">メンバー</p>
+            <p>技術コミュニティのメンバーとして活動しています。</p>
           </div>
         </div>
       </div>
@@ -106,11 +115,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <section class="interests-section">
       <h2>Interests</h2>
       <div class="interests-grid">
-        <div class="interest-card">
-          <div class="interest-icon">🌐</div>
-          <h3>Web Technologies</h3>
-          <p>モダンなWeb開発技術、パフォーマンス最適化、ユーザーエクスペリエンスの向上に興味があります。</p>
-        </div>
         
         <div class="interest-card">
           <div class="interest-icon">🎮</div>
@@ -188,6 +192,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   
   .avatar {
     flex-shrink: 0;
+  }
+  
+  .avatar-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent);
   }
   
   .avatar-placeholder {

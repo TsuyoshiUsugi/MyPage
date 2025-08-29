@@ -1,8 +1,9 @@
 ---
 title: "ポートフォリオサイトを作成しました"
 description: "AstroとGitHub Pagesを使ってポートフォリオサイトを作成した際の技術選定や実装のポイントについて紹介します。"
-pubDate: 2024-08-28
-tags: ["Astro", "GitHub Pages", "ポートフォリオ"]
+pubDate: 2025-08-29
+priority: 1
+tags: ["Astro", "GitHub Pages", "ポートフォリオ", "AI生成"]
 ---
 
 ## はじめに

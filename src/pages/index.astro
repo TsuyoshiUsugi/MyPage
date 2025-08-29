@@ -7,7 +7,15 @@ import { getCollection } from 'astro:content';
 // 最新のブログ記事3件を取得
 const allPosts = await getCollection('blog');
 const latestPosts = allPosts
-  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+  .sort((a, b) => {
+    const dateA = new Date(a.data.pubDate).getTime();
+    const dateB = new Date(b.data.pubDate).getTime();
+    if (dateA === dateB) {
+      // 同じ日付の場合は優先度で並び替え（数値が大きい方が後に表示）
+      return (a.data.priority || 0) - (b.data.priority || 0);
+    }
+    return dateB - dateA;
+  })
   .slice(0, 3);
 ---
 
@@ -77,16 +85,6 @@ const latestPosts = allPosts
         <div class="work-content">
           <h3>Unity WebGLゲーム</h3>
           <p>ブラウザで遊べるWebGLゲーム作品を公開予定です。</p>
-        </div>
-      </article>
-      
-      <article class="work-card">
-        <div class="work-placeholder">
-          <span>💻</span>
-        </div>
-        <div class="work-content">
-          <h3>Webアプリケーション</h3>
-          <p>React、Next.js等を使ったWebアプリケーション作品。</p>
         </div>
       </article>
     </div>
