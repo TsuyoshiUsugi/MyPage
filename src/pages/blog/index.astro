@@ -65,10 +65,18 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sor
       )}
     </section>
     
-    <!-- AdSense プレースホルダー -->
+    <!-- AdSense 広告 -->
     {sortedPosts.length > 3 && (
-      <div class="adsense-slot">
-        <p>広告エリア（AdSense設定後に表示）</p>
+      <div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-1222095464915408"
+             data-ad-slot="auto"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
       </div>
     )}
   </div>
