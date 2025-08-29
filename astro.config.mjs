@@ -1,8 +1,8 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://tsuyoshiusugi.github.io',
-  base: '/MyPage',
+  site: 'https://morumoru.jp',
+  base: '/',
   output: 'static',
   build: {
     assets: 'assets'
