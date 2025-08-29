@@ -26,8 +26,8 @@ try {
     }
   } else {
     // プロダクション環境：HTTPリクエスト
-    const baseUrl = import.meta.env.BASE_URL || '';
-    const response = await fetch(`${baseUrl}data/playlist.json`);
+    const siteUrl = import.meta.env.SITE || 'https://morumoru.jp';
+    const response = await fetch(`${siteUrl}/data/playlist.json`);
     if (response.ok) {
       playlistData = await response.json();
     }
@@ -179,11 +179,11 @@ try {
   }
 </style>
 
-<script define:vars={{ baseUrl: import.meta.env.BASE_URL || '' }}>
+<script define:vars={{ siteUrl: import.meta.env.SITE || 'https://morumoru.jp' }}>
   // クライアントサイドでプレイリストデータを再取得
   document.addEventListener('DOMContentLoaded', async () => {
     try {
-      const response = await fetch(`${baseUrl}data/playlist.json`);
+      const response = await fetch(`${siteUrl}/data/playlist.json`);
       if (response.ok) {
         const data = await response.json();
         // プレイリストが空の場合の処理は既にHTMLに含まれている

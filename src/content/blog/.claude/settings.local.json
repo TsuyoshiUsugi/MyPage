@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(C:\\Users\\qesul\\Documents\\MyPage/**)",
+      "Read(C:\\Users\\qesul\\Documents\\MyPage\\src/**)",
+      "Read(C:\\Users\\qesul\\Documents\\MyPage/**)",
+      "Bash(npm run build:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
