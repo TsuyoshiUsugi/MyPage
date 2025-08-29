@@ -6,7 +6,10 @@
       "Read(C:\\Users\\qesul\\Documents\\MyPage/**)",
       "Bash(npm run build:*)",
       "Bash(git checkout:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:www.wantedly.com)"
     ],
     "deny": [],
     "ask": []

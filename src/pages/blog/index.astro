@@ -5,9 +5,15 @@ import { getCollection } from 'astro:content';
 
 // ブログ記事を取得してソート
 const allPosts = await getCollection('blog');
-const sortedPosts = allPosts.sort(
-  (a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()
-);
+const sortedPosts = allPosts.sort((a, b) => {
+  const dateA = new Date(a.data.pubDate).getTime();
+  const dateB = new Date(b.data.pubDate).getTime();
+  if (dateA === dateB) {
+    // 同じ日付の場合は優先度で並び替え（数値が大きい方が後に表示）
+    return (a.data.priority || 0) - (b.data.priority || 0);
+  }
+  return dateB - dateA;
+});
 
 // タグの一覧を取得
 const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sort();
