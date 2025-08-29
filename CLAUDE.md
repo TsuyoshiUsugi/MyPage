@@ -104,3 +104,13 @@ Dark theme with consistent color variables:
 - **Remote**: git@github.com:TsuyoshiUsugi/MyPage.git
 - **Main Branch**: master
 - **Deployment**: Automatic via GitHub Actions to GitHub Pages
+
+## Claude Code Workflow
+When making changes to the codebase, Claude should follow this workflow:
+1. Create a new feature branch for the work
+2. Make necessary code changes
+3. Test the changes (build, type check, etc.)
+4. Create a pull request with descriptive title and summary
+5. Include test plan in the PR description
+
+This ensures proper version control and code review process for all changes.

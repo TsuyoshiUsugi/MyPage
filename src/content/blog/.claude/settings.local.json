@@ -4,7 +4,9 @@
       "Read(C:\\Users\\qesul\\Documents\\MyPage/**)",
       "Read(C:\\Users\\qesul\\Documents\\MyPage\\src/**)",
       "Read(C:\\Users\\qesul\\Documents\\MyPage/**)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)"
     ],
     "deny": [],
     "ask": []
