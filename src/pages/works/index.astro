@@ -1,5 +1,24 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// worksコレクションから作品を取得
+const allWorks = await getCollection('works');
+const publishedWorks = allWorks
+  .filter(work => work.data.status === 'published' || work.data.status === 'coming-soon')
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+const categoryNames = {
+  game: 'ゲーム',
+  web: 'Webアプリ',
+  other: 'その他'
+};
+
+const statusNames = {
+  published: '公開中',
+  'coming-soon': '準備中',
+  draft: '下書き'
+};
 ---
 
 <BaseLayout 
@@ -25,64 +44,53 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     
     <!-- 作品一覧 -->
     <section class="works-grid">
-      <!-- Unity WebGL ゲーム (サンプル) -->
-      <article class="work-card" data-category="game">
-        <div class="work-image">
-          <div class="image-placeholder">
-            <span class="placeholder-icon">🎮</span>
-          </div>
-        </div>
-        <div class="work-content">
-          <div class="work-meta">
-            <span class="work-category">Unity Game</span>
-            <span class="work-date">Coming Soon</span>
-          </div>
-          <h3 class="work-title">Unity WebGL Game</h3>
-          <p class="work-description">
-            Unityで制作したブラウザで遊べるWebGLゲーム。
-            シンプルなゲームプレイと直感的な操作性を重視した作品です。
-          </p>
-          <div class="work-tech">
-            <span class="tech-tag">Unity</span>
-            <span class="tech-tag">C#</span>
-            <span class="tech-tag">WebGL</span>
-          </div>
-          <div class="work-actions">
-            <a href="/works/sample" class="btn-primary">詳細を見る</a>
-            <button class="btn-secondary" disabled>準備中</button>
-          </div>
-        </div>
-      </article>
-      
-      <!-- このポートフォリオサイト -->
-      <article class="work-card" data-category="web">
-        <div class="work-image">
-          <div class="image-placeholder">
-            <span class="placeholder-icon">🎨</span>
-          </div>
-        </div>
-        <div class="work-content">
-          <div class="work-meta">
-            <span class="work-category">Portfolio</span>
-            <span class="work-date">2025</span>
-          </div>
-          <h3 class="work-title">Portfolio Site</h3>
-          <p class="work-description">
-            Astroで制作したこのポートフォリオサイト。
-            静的サイト生成とGitHub Pagesでの自動デプロイを実装。
-          </p>
-          <div class="work-tech">
-            <span class="tech-tag">Astro</span>
-            <span class="tech-tag">TypeScript</span>
-            <span class="tech-tag">GitHub Actions</span>
-          </div>
-          <div class="work-actions">
-            <a href="https://github.com/TsuyoshiUsugi/MyPage" class="btn-primary" target="_blank" rel="noopener noreferrer">
-              GitHub
-            </a>
-          </div>
-        </div>
-      </article>
+      {publishedWorks.map((work) => {
+        const formattedDate = work.data.date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long' });
+        return (
+          <article class="work-card" data-category={work.data.category}>
+            <div class="work-image">
+              {work.data.image ? (
+                <img src={work.data.image} alt={work.data.title} loading="lazy" />
+              ) : (
+                <div class="image-placeholder">
+                  <span class="placeholder-icon">
+                    {work.data.category === 'game' ? '🎮' : work.data.category === 'web' ? '💻' : '📁'}
+                  </span>
+                </div>
+              )}
+            </div>
+            <div class="work-content">
+              <div class="work-meta">
+                <span class="work-category">{categoryNames[work.data.category]}</span>
+                <span class="work-date">{formattedDate}</span>
+                {work.data.status === 'coming-soon' && (
+                  <span class="status-badge">準備中</span>
+                )}
+              </div>
+              <h3 class="work-title">{work.data.title}</h3>
+              <p class="work-description">{work.data.description}</p>
+              <div class="work-tech">
+                {work.data.technologies.map(tech => (
+                  <span class="tech-tag">{tech}</span>
+                ))}
+              </div>
+              <div class="work-actions">
+                <a href={`/works/${work.slug}/`} class="btn-primary">詳細を見る</a>
+                {work.data.demo && work.data.status === 'published' && (
+                  <a href={work.data.demo} class="btn-secondary" target="_blank" rel="noopener noreferrer">
+                    {work.data.demo.includes('steam') ? 'Steam で遊ぶ' : 
+                     work.data.demo.includes('github') ? 'GitHub' : 
+                     work.data.demo.startsWith('/works/') ? 'プレイ' : 'デモを見る'}
+                  </a>
+                )}
+                {work.data.demo && work.data.status === 'coming-soon' && (
+                  <button class="btn-secondary" disabled>準備中</button>
+                )}
+              </div>
+            </div>
+          </article>
+        );
+      })}
     </section>
     
     <!-- 空の状態（フィルター適用時） -->

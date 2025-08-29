@@ -1,0 +1,393 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import GameEmbed from '../../components/GameEmbed.astro';
+
+export async function getStaticPaths() {
+  const worksEntries = await getCollection('works');
+  return worksEntries
+    .filter(entry => entry.data.status === 'published' || entry.data.status === 'coming-soon')
+    .map(entry => ({
+      params: { slug: entry.slug },
+      props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const { title, description, category, date, technologies, image, github, demo, status } = entry.data;
+
+const formattedDate = date.toLocaleDateString('ja-JP', {
+  year: 'numeric',
+  month: 'long'
+});
+
+const categoryNames = {
+  game: 'ゲーム',
+  web: 'Webアプリ',
+  other: 'その他'
+};
+---
+
+<BaseLayout 
+  title={`${title} - モルモ's Tech? ブログ`}
+  description={description}
+>
+  <div class="work-detail">
+    <header class="work-header">
+      <nav class="breadcrumb">
+        <a href="/">Home</a>
+        <span class="separator">›</span>
+        <a href="/works">Works</a>
+        <span class="separator">›</span>
+        <span class="current">{title}</span>
+      </nav>
+      
+      <div class="work-meta">
+        <span class="work-category">{categoryNames[category]}</span>
+        <time class="work-date">{formattedDate}</time>
+        {status === 'coming-soon' && (
+          <span class="status-badge coming-soon">準備中</span>
+        )}
+      </div>
+      
+      <h1 class="work-title">{title}</h1>
+      <p class="work-description">{description}</p>
+      
+      <div class="tech-stack">
+        {technologies.map(tech => (
+          <span class="tech-tag">{tech}</span>
+        ))}
+      </div>
+      
+      <div class="work-actions">
+        {demo && status === 'published' && (
+          <a href={demo} class="btn-primary" target="_blank" rel="noopener noreferrer">
+            {demo.includes('steam') ? 'Steam で遊ぶ' : 
+             demo.startsWith('/works/') ? 'プレイ' : 'デモを見る'}
+          </a>
+        )}
+        {demo && status === 'coming-soon' && (
+          <button class="btn-primary" disabled>準備中</button>
+        )}
+        {github && (
+          <a href={github} class="btn-secondary" target="_blank" rel="noopener noreferrer">
+            GitHub
+          </a>
+        )}
+      </div>
+    </header>
+
+    <!-- ゲーム埋め込み (categoryがgameかつdemoが存在する場合) -->
+    {category === 'game' && demo && demo.startsWith('/works/') && (
+      <section class="game-section">
+        <h2>ゲームプレイ</h2>
+        <GameEmbed 
+          gameUrl={demo}
+          title={title}
+          width="800px"
+          height="600px"
+        />
+      </section>
+    )}
+
+    <!-- 画像 (imageが指定されている場合) -->
+    {image && (
+      <section class="work-image-section">
+        <img src={image} alt={title} class="work-image" loading="lazy" />
+      </section>
+    )}
+    
+    <!-- 作品詳細内容 -->
+    <section class="work-content">
+      <Content />
+    </section>
+    
+    <div class="back-link">
+      <a href="/works">← 作品一覧に戻る</a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .work-detail {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  /* ブレッドクラム */
+  .breadcrumb {
+    margin-bottom: 2rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+  }
+  
+  .breadcrumb a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+  
+  .separator {
+    margin: 0 0.5rem;
+  }
+  
+  .current {
+    color: var(--text-primary);
+  }
+  
+  /* ワークヘッダー */
+  .work-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .work-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .work-category {
+    background: rgba(138, 180, 248, 0.1);
+    color: var(--accent);
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .work-date {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+  
+  .status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .status-badge.coming-soon {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+  }
+  
+  .work-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+  }
+  
+  .work-description {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+  
+  .tech-stack {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  
+  .tech-tag {
+    background: rgba(138, 180, 248, 0.1);
+    color: var(--accent);
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .work-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border: 2px solid;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+  }
+  
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+  
+  .btn-secondary {
+    background: transparent;
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  
+  .btn-secondary:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+  }
+  
+  /* ゲームセクション */
+  .game-section {
+    margin: 3rem 0;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .game-section h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--accent);
+  }
+  
+  /* 画像セクション */
+  .work-image-section {
+    margin: 3rem 0;
+  }
+  
+  .work-image {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+  
+  /* コンテンツ */
+  .work-content {
+    line-height: 1.8;
+    color: var(--text-primary);
+    margin: 3rem 0;
+  }
+  
+  /* Markdown スタイル */
+  .work-content :global(h1),
+  .work-content :global(h2),
+  .work-content :global(h3),
+  .work-content :global(h4) {
+    margin: 2rem 0 1rem 0;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  
+  .work-content :global(h2) { 
+    font-size: 1.75rem; 
+    color: var(--accent); 
+  }
+  .work-content :global(h3) { font-size: 1.5rem; }
+  .work-content :global(h4) { font-size: 1.25rem; }
+  
+  .work-content :global(p) {
+    margin: 1.5rem 0;
+  }
+  
+  .work-content :global(ul),
+  .work-content :global(ol) {
+    margin: 1.5rem 0;
+    padding-left: 2rem;
+  }
+  
+  .work-content :global(li) {
+    margin: 0.5rem 0;
+  }
+  
+  .work-content :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  
+  .work-content :global(code) {
+    background: var(--border);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+    font-size: 0.9em;
+  }
+  
+  .work-content :global(pre) {
+    background: var(--border);
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 2rem 0;
+  }
+  
+  .work-content :global(blockquote) {
+    border-left: 4px solid var(--accent);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+  
+  /* バックリンク */
+  .back-link {
+    margin-top: 3rem;
+    text-align: center;
+  }
+  
+  .back-link a {
+    color: var(--accent);
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .back-link a:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+  }
+  
+  /* レスポンシブ */
+  @media (max-width: 768px) {
+    .work-title {
+      font-size: 2rem;
+    }
+    
+    .work-description {
+      font-size: 1rem;
+    }
+    
+    .work-meta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .work-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+      text-align: center;
+    }
+  }
+</style>
