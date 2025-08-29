@@ -1,7 +1,7 @@
 ---
 title: "㊗ブログ開設！"
 description: "モルモの最初のブログページです！"
-pubDate: 2025-08-25
+pubDate: 2025-08-29
 priority: 0
 tags: ["日記"]
 ---
