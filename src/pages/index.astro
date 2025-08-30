@@ -95,10 +95,14 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
       </div>
     )}
     
+    <!-- フィルターオーバーレイ -->
+    {allWorks.filter(work => work.data.image && work.data.status === 'published').length > 0 && (
+      <div class="hero-filter"></div>
+    )}
+    
     <div class="hero-content">
       <h1 class="hero-title">
-        こんにちは、<br />
-        <span class="accent">モルモ</span> です
+        こんにちは、<span class="accent">モルモ</span>です
       </h1>
       <p class="hero-description">
         エンジニア・開発者として日々学んだことや作品を紹介しています。<br />
@@ -107,6 +111,19 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
       <div class="hero-actions">
         <a href="/about" class="btn-primary">About Me</a>
         <a href="/works" class="btn-secondary">Works</a>
+      </div>
+      
+      <!-- ソーシャルリンク -->
+      <div class="hero-social">
+        <a href="https://x.com/TsuyoshiUsugi" class="social-btn" target="_blank" rel="noopener noreferrer">
+          <span>𝕏</span>
+        </a>
+        <a href="https://qiita.com/TsuyoshiUsugi" class="social-btn" target="_blank" rel="noopener noreferrer">
+          <span>Qiita</span>
+        </a>
+        <a href="https://github.com/TsuyoshiUsugi" class="social-btn" target="_blank" rel="noopener noreferrer">
+          <span>GitHub</span>
+        </a>
       </div>
     </div>
   </section>
@@ -268,6 +285,17 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
     100% { transform: translateX(-20%); }
   }
 
+  /* フィルターオーバーレイ */
+  .hero-filter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 17, 21, 0.4);
+    z-index: 1;
+  }
+
   /* ヒーローセクション */
   .hero {
     position: relative;
@@ -278,7 +306,7 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
   
   .hero-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     max-width: 500px;
     margin: 0 auto;
     padding: 3rem 2rem;
@@ -343,6 +371,31 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
   .btn-secondary:hover {
     background: var(--accent);
     color: var(--bg-primary);
+  }
+  
+  /* ソーシャルボタン */
+  .hero-social {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+  
+  .social-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .social-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(138, 180, 248, 0.1);
   }
   
   /* セクション共通 */
