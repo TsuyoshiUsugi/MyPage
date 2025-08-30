@@ -9,6 +9,7 @@ image: "/works/soul-rush-game/header.jpg"
 github: "https://github.com/VGA-GLAB/2024_TeamC"
 demo: "https://store.steampowered.com/app/3298490/Soul_Rush/"
 status: "published"
+relatedPosts: ["about-soulrush"]
 ---
 
 # ゲーム概要

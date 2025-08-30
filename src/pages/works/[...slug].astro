@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import GameEmbed from '../../components/GameEmbed.astro';
+import RelatedPosts from '../../components/RelatedPosts.astro';
 
 export async function getStaticPaths() {
   const worksEntries = await getCollection('works');
@@ -15,7 +16,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
-const { title, description, category, date, technologies, image, github, demo, status } = entry.data;
+const { title, description, category, date, technologies, image, github, demo, status, relatedPosts, relatedWorks } = entry.data;
 
 const formattedDate = date.toLocaleDateString('ja-JP', {
   year: 'numeric',
@@ -30,7 +31,7 @@ const categoryNames = {
 ---
 
 <BaseLayout 
-  title={`${title} - モルモ's Tech? ブログ`}
+  title={title}
   description={description}
 >
   <div class="work-detail">
@@ -107,6 +108,11 @@ const categoryNames = {
       <a href="/works">← 作品一覧に戻る</a>
     </div>
   </div>
+  
+  <!-- 関連記事 -->
+  {((relatedPosts && relatedPosts.length > 0) || (relatedWorks && relatedWorks.length > 0)) && (
+    <RelatedPosts relatedPosts={relatedPosts} relatedWorks={relatedWorks} currentSlug={entry.slug} />
+  )}
 </BaseLayout>
 
 <style>

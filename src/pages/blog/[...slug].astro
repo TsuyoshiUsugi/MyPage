@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import RelatedPosts from '../../components/RelatedPosts.astro';
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection('blog');
@@ -12,7 +13,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
-const { title, description, pubDate, tags, ogImage } = entry.data;
+const { title, description, pubDate, tags, ogImage, relatedPosts, relatedWorks } = entry.data;
 
 const formattedDate = pubDate.toLocaleDateString('ja-JP', {
   year: 'numeric',
@@ -22,7 +23,7 @@ const formattedDate = pubDate.toLocaleDateString('ja-JP', {
 ---
 
 <BaseLayout 
-  title={`${title} - モルモ Portfolio`}
+  title={title}
   description={description}
   ogImage={ogImage}
 >
@@ -89,7 +90,7 @@ const formattedDate = pubDate.toLocaleDateString('ja-JP', {
             rel="noopener noreferrer"
             class="share-btn twitter"
           >
-            Twitter
+            X
           </a>
           <a 
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(Astro.url.toString())}`}
@@ -109,13 +110,12 @@ const formattedDate = pubDate.toLocaleDateString('ja-JP', {
         </div>
       </div>
     </footer>
-    
-    <!-- 関連記事（将来的に実装） -->
-    <aside class="related-posts">
-      <h3>関連記事</h3>
-      <p class="coming-soon">関連記事の表示機能は近日実装予定です</p>
-    </aside>
   </article>
+  
+  <!-- 関連記事 -->
+  {((relatedPosts && relatedPosts.length > 0) || (relatedWorks && relatedWorks.length > 0)) && (
+    <RelatedPosts relatedPosts={relatedPosts} relatedWorks={relatedWorks} currentSlug={entry.slug} />
+  )}
 </BaseLayout>
 
 <style>

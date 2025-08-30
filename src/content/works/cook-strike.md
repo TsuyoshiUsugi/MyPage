@@ -1,10 +1,10 @@
 ---
 title: "クックストライク"
 description: "お料理シューティングゲーム"
-category: "game"
+category: "webgl"
 date: 2025-08-29
 priority: 2
-technologies: ["Unity", "C#"]
+technologies: ["Unity", "C#", "WebGL"]
 image: "/works/cook-strike-game/header.jpg"
 github: "https://github.com/TsuyoshiUsugi/CyberProto"
 demo: "https://unityroom.com/games/cook-strike"

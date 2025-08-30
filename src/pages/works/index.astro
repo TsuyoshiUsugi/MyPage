@@ -10,7 +10,7 @@ const publishedWorks = allWorks
 
 const categoryNames = {
   game: 'ゲーム',
-  web: 'Webアプリ',
+  webgl: 'WebGL',
   other: 'その他'
 };
 
@@ -22,7 +22,7 @@ const statusNames = {
 ---
 
 <BaseLayout 
-  title="Works - モルモ Portfolio" 
+  title="Works" 
   description="制作した作品やプロジェクトの紹介ページです。WebアプリケーションやUnityゲームなどを掲載しています。"
 >
   <div class="works-container">
@@ -36,7 +36,7 @@ const statusNames = {
       <h2 class="filter-title">Category</h2>
       <div class="filter-buttons">
         <button class="filter-btn active" data-category="all">All</button>
-        <button class="filter-btn" data-category="web">Web App</button>
+        <button class="filter-btn" data-category="webgl">WebGL</button>
         <button class="filter-btn" data-category="game">Game</button>
         <button class="filter-btn" data-category="other">Other</button>
       </div>
@@ -48,46 +48,48 @@ const statusNames = {
         const formattedDate = work.data.date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long' });
         return (
           <article class="work-card" data-category={work.data.category}>
-            <div class="work-image">
-              {work.data.image ? (
-                <img src={work.data.image} alt={work.data.title} loading="lazy" />
-              ) : (
-                <div class="image-placeholder">
-                  <span class="placeholder-icon">
-                    {work.data.category === 'game' ? '🎮' : work.data.category === 'web' ? '💻' : '📁'}
-                  </span>
+            <a href={`/works/${work.slug}/`} class="work-card-link">
+              <div class="work-image">
+                {work.data.image ? (
+                  <img src={work.data.image} alt={work.data.title} loading="lazy" />
+                ) : (
+                  <div class="image-placeholder">
+                    <span class="placeholder-icon">
+                      {work.data.category === 'game' ? '🎮' : work.data.category === 'webgl' ? '🌐' : '📁'}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <div class="work-content">
+                <div class="work-meta">
+                  <span class="work-category">{categoryNames[work.data.category]}</span>
+                  <span class="work-date">{formattedDate}</span>
+                  {work.data.status === 'coming-soon' && (
+                    <span class="status-badge">準備中</span>
+                  )}
                 </div>
-              )}
-            </div>
-            <div class="work-content">
-              <div class="work-meta">
-                <span class="work-category">{categoryNames[work.data.category]}</span>
-                <span class="work-date">{formattedDate}</span>
-                {work.data.status === 'coming-soon' && (
-                  <span class="status-badge">準備中</span>
-                )}
+                <h3 class="work-title">{work.data.title}</h3>
+                <p class="work-description">{work.data.description}</p>
+                <div class="work-tech">
+                  {work.data.technologies.map(tech => (
+                    <span class="tech-tag">{tech}</span>
+                  ))}
+                </div>
+                <div class="work-actions">
+                  <span class="btn-primary">詳細を見る</span>
+                  {work.data.demo && work.data.status === 'published' && (
+                    <span class="btn-secondary external-link" data-href={work.data.demo}>
+                      {work.data.demo.includes('steam') ? 'Steam で遊ぶ' : 
+                       work.data.demo.includes('github') ? 'GitHub' : 
+                       work.data.status === 'published' ? 'プレイする' : 'デモを見る'}
+                    </span>
+                  )}
+                  {work.data.demo && work.data.status === 'coming-soon' && (
+                    <span class="btn-secondary disabled">準備中</span>
+                  )}
+                </div>
               </div>
-              <h3 class="work-title">{work.data.title}</h3>
-              <p class="work-description">{work.data.description}</p>
-              <div class="work-tech">
-                {work.data.technologies.map(tech => (
-                  <span class="tech-tag">{tech}</span>
-                ))}
-              </div>
-              <div class="work-actions">
-                <a href={`/works/${work.slug}/`} class="btn-primary">詳細を見る</a>
-                {work.data.demo && work.data.status === 'published' && (
-                  <a href={work.data.demo} class="btn-secondary" target="_blank" rel="noopener noreferrer">
-                    {work.data.demo.includes('steam') ? 'Steam で遊ぶ' : 
-                     work.data.demo.includes('github') ? 'GitHub' : 
-                     work.data.status === 'published' ? 'プレイする' : 'デモを見る'}
-                  </a>
-                )}
-                {work.data.demo && work.data.status === 'coming-soon' && (
-                  <button class="btn-secondary" disabled>準備中</button>
-                )}
-              </div>
-            </div>
+            </a>
           </article>
         );
       })}
@@ -196,6 +198,13 @@ const statusNames = {
     transform: translateY(-4px);
     border-color: var(--accent);
     box-shadow: 0 8px 32px rgba(138, 180, 248, 0.1);
+  }
+  
+  .work-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
   }
   
   .work-image {
@@ -437,6 +446,19 @@ const statusNames = {
           } else {
             emptyState.style.display = 'none';
           }
+        }
+      });
+    });
+    
+    // 外部リンクのクリックイベント処理
+    const externalLinks = document.querySelectorAll('.external-link');
+    externalLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const href = link.getAttribute('data-href');
+        if (href) {
+          window.open(href, '_blank', 'noopener,noreferrer');
         }
       });
     });

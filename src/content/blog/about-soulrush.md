@@ -4,6 +4,7 @@ description: "ゲームクリエイターズ甲子園2024で企業賞を受賞�
 pubDate: 2025-08-31
 priority: 0
 tags: ["ゲーム制作"]
+relatedWorks: ["soul-rush"]
 ---
 
 # 面白いゲームをチームで作るために意識していたこと

@@ -10,6 +10,8 @@ const blogCollection = defineCollection({
     priority: z.number().default(0),
     tags: z.array(z.string()).optional(),
     ogImage: z.string().optional(),
+    relatedPosts: z.array(z.string()).optional(),
+    relatedWorks: z.array(z.string()).optional(),
   }),
 });
 
@@ -18,7 +20,7 @@ const worksCollection = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    category: z.enum(['game', 'web', 'other']),
+    category: z.enum(['game', 'webgl', 'other']),
     date: z.date(),
     priority: z.number().default(0),
     technologies: z.array(z.string()),
@@ -26,6 +28,8 @@ const worksCollection = defineCollection({
     github: z.string().optional(),
     demo: z.string().optional(),
     status: z.enum(['published', 'draft', 'coming-soon']).default('published'),
+    relatedPosts: z.array(z.string()).optional(),
+    relatedWorks: z.array(z.string()).optional(),
   }),
 });
 

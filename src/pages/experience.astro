@@ -15,7 +15,7 @@ const sortedExperience = allExperience.sort((a, b) => {
 ---
 
 <BaseLayout 
-  title="Experience & Learning - モルモ Portfolio" 
+  title="Experience & Learning" 
   description="これまでの経歴・学習履歴について紹介しています。"
 >
   <div class="experience-container">
@@ -48,7 +48,9 @@ const sortedExperience = allExperience.sort((a, b) => {
                 <div class="experience-skills">
                   <h3>使用技術・スキル</h3>
                   <div class="skills-list">
-                    {exp.data.skills.map(skill => (
+                    {exp.data.skills.flatMap(skill => 
+                      skill.split(',').map(s => s.trim())
+                    ).map(skill => (
                       <span class="skill-tag">{skill}</span>
                     ))}
                   </div>

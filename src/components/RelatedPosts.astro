@@ -1,0 +1,225 @@
+---
+import { getCollection } from 'astro:content';
+
+export interface Props {
+  relatedPosts?: string[];
+  relatedWorks?: string[];
+  currentSlug: string;
+}
+
+const { relatedPosts, relatedWorks, currentSlug } = Astro.props;
+
+if ((!relatedPosts || relatedPosts.length === 0) && (!relatedWorks || relatedWorks.length === 0)) {
+  return null;
+}
+
+// 関連記事/作品を取得
+let relatedItems = [];
+
+// ブログ記事の取得
+if (relatedPosts && relatedPosts.length > 0) {
+  const allPosts = await getCollection('blog');
+  const blogItems = allPosts
+    .filter(post => relatedPosts.includes(post.slug) && post.slug !== currentSlug)
+    .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+    .map(post => ({
+      ...post,
+      url: `/blog/${post.slug}/`,
+      date: post.data.pubDate,
+      tags: post.data.tags
+    }));
+  relatedItems = relatedItems.concat(blogItems);
+}
+
+// Works作品の取得
+if (relatedWorks && relatedWorks.length > 0) {
+  const allWorks = await getCollection('works');
+  const workItems = allWorks
+    .filter(work => relatedWorks.includes(work.slug) && work.slug !== currentSlug)
+    .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+    .map(work => ({
+      ...work,
+      url: `/works/${work.slug}/`,
+      date: work.data.date,
+      tags: work.data.technologies
+    }));
+  relatedItems = relatedItems.concat(workItems);
+}
+
+if (relatedItems.length === 0) {
+  return null;
+}
+---
+
+<section class="related-posts">
+  <div class="related-posts-header">
+    <h3>関連記事</h3>
+    <div class="header-line"></div>
+  </div>
+  
+  <div class="related-posts-grid">
+    {relatedItems.map((item) => {
+      const formattedDate = item.date.toLocaleDateString('ja-JP', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      return (
+        <article class="related-post-card">
+          <a href={item.url} class="related-post-link">
+            <div class="related-post-content">
+              <div class="related-post-meta">
+                <time class="related-post-date" datetime={item.date.toISOString()}>
+                  {formattedDate}
+                </time>
+                {item.tags && item.tags.length > 0 && (
+                  <div class="related-post-tags">
+                    {item.tags.slice(0, 2).map(tag => (
+                      <span class="related-post-tag">{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <h4 class="related-post-title">{item.data.title}</h4>
+              <p class="related-post-description">{item.data.description}</p>
+            </div>
+          </a>
+        </article>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .related-posts {
+    max-width: 800px;
+    margin: 2rem auto 2rem auto;
+    padding: 2rem;
+  }
+  
+  .related-posts-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .related-posts-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+    margin: 0;
+  }
+  
+  .header-line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(to right, var(--accent), transparent);
+  }
+  
+  .related-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .related-post-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.02);
+    transition: all 0.3s ease;
+  }
+  
+  .related-post-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 32px rgba(138, 180, 248, 0.1);
+  }
+  
+  .related-post-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    padding: 1.5rem;
+    height: 100%;
+  }
+  
+  .related-post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+  
+  .related-post-date {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    white-space: nowrap;
+  }
+  
+  .related-post-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .related-post-tag {
+    background: var(--accent);
+    color: var(--bg-primary);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .related-post-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .related-post-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  @media (max-width: 768px) {
+    .related-posts {
+      margin: 1.5rem auto 1rem auto;
+      padding: 1.5rem 1rem;
+    }
+    
+    .related-posts-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    
+    .related-posts-header h3 {
+      font-size: 1.25rem;
+    }
+    
+    .related-post-link {
+      padding: 1.25rem;
+    }
+    
+    .related-post-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+</style>

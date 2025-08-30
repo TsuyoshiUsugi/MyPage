@@ -6,6 +6,10 @@ export interface Props {
 }
 
 const { title, description = "モルモのポートフォリオサイト", ogImage = "/assets/og-image.jpg" } = Astro.props;
+
+// タイトルの統一処理
+const siteTitle = "モルモのテック?ブログ";
+const pageTitle = title.endsWith(siteTitle) ? title : `${title} | ${siteTitle}`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -29,7 +33,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <meta property="og:image" content={ogImage} />
   <meta property="og:url" content={canonicalURL} />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="モルモ Portfolio" />
+  <meta property="og:site_name" content="モルモのテック?ブログ" />
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -46,7 +50,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1222095464915408"
        crossorigin="anonymous"></script>
   
-  <title>{title}</title>
+  <title>{pageTitle}</title>
 </head>
 <body>
   <header>
@@ -54,7 +58,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <div class="nav-container">
         <a href="/" class="logo">
           <img src="/assets/profile-icon.png" alt="Mormo icon" class="site-icon" />
-          <span class="logo-text">モルモ's Tech? ブログ</span>
+          <span class="logo-text">モルモのテック?ブログ</span>
         </a>
         <ul class="nav-links">
           <li><a href="/">Home</a></li>

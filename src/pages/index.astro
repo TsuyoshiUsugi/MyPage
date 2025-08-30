@@ -52,7 +52,7 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
 ---
 
 <BaseLayout 
-  title="モルモ Portfolio" 
+  title="モルモのテック?ブログ" 
   description="エンジニア・開発者のポートフォリオサイト。技術ブログ、作品紹介、音楽プレイリストなどを掲載しています。"
 >
   <!-- ヒーローセクション -->
@@ -99,8 +99,8 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
     <div class="hero-overlay"></div>
     
     <div class="hero-content">
-      <h1 class="hero-title">
-        こんにちは、<span class="accent">モルモ</span> です
+      <h1 class="hero-title" id="greeting-title">
+        <span id="greeting-text">こんにちは</span>、<span class="accent">モルモ</span> です
       </h1>
       <p class="hero-description">
         エンジニア・開発者として日々学んだことや作品を紹介しています。<br />
@@ -669,3 +669,26 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
     }
   }
 </style>
+
+<script>
+  // 時間帯による挨拶の切り替え
+  document.addEventListener('DOMContentLoaded', () => {
+    const greetingElement = document.getElementById('greeting-text');
+    if (!greetingElement) return;
+
+    const now = new Date();
+    const hour = now.getHours();
+    
+    let greeting = 'こんにちは';
+    
+    if (hour >= 5 && hour < 11) {
+      greeting = 'おはようございます';
+    } else if (hour >= 11 && hour < 17) {
+      greeting = 'こんにちは';
+    } else {
+      greeting = 'こんばんわ';
+    }
+    
+    greetingElement.textContent = greeting;
+  });
+</script>
