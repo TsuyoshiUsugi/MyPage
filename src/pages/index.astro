@@ -100,7 +100,7 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
     
     <div class="hero-content">
       <h1 class="hero-title" id="greeting-title">
-        <span id="greeting-text">こんにちは</span>、<span class="accent">モルモ</span> です
+        <span id="greeting-text">こんにちは</span>、<br class="mobile-br"><span class="accent">モルモ</span> です
       </h1>
       <p class="hero-description">
         ゲーム制作の中で学んだ技術や作品を紹介しています。
@@ -621,8 +621,16 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
     margin-bottom: 1rem;
   }
   
+  /* モバイル改行 */
+  .mobile-br {
+    display: none;
+  }
+  
   /* レスポンシブ */
   @media (max-width: 768px) {
+    .mobile-br {
+      display: inline;
+    }
     .hero {
       padding: 4rem 0 5rem 0;
     }
@@ -663,7 +671,11 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
     
     .posts-grid {
       grid-template-columns: 1fr;
-      gap: 2.5rem;
+      gap: 3rem;
+    }
+    
+    .post-card {
+      margin-bottom: 1rem;
     }
     
     .works-grid {
