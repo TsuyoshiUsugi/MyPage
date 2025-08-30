@@ -60,11 +60,28 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
           <img src="/assets/profile-icon.png" alt="Mormo icon" class="site-icon" />
           <span class="logo-text">モルモのテック?ブログ</span>
         </a>
-        <ul class="nav-links">
+        
+        <!-- ハンバーガーメニューボタン -->
+        <button class="mobile-menu-button" id="mobileMenuButton" aria-label="メニューを開く">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </button>
+        
+        <!-- デスクトップ用ナビゲーション -->
+        <ul class="nav-links desktop-nav">
           <li><a href="/">Home</a></li>
           <li><a href="/blog">Blog</a></li>
           <li><a href="/works">Works</a></li>
           <li><a href="/about">About</a></li>
+        </ul>
+        
+        <!-- モバイル用ナビゲーション -->
+        <ul class="nav-links mobile-nav" id="mobileNav">
+          <li><a href="/" onclick="closeMobileMenu()">Home</a></li>
+          <li><a href="/blog" onclick="closeMobileMenu()">Blog</a></li>
+          <li><a href="/works" onclick="closeMobileMenu()">Works</a></li>
+          <li><a href="/about" onclick="closeMobileMenu()">About</a></li>
         </ul>
       </div>
     </nav>
@@ -96,6 +113,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+    }
+    
+    /* 横スクロール防止 */
+    html, body {
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
     }
     
     html {
@@ -171,6 +195,78 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       color: var(--accent);
     }
     
+    /* ハンバーガーメニューボタン */
+    .mobile-menu-button {
+      display: none;
+      flex-direction: column;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      gap: 0.25rem;
+      z-index: 1001;
+    }
+    
+    .hamburger-line {
+      width: 24px;
+      height: 2px;
+      background-color: var(--text-secondary);
+      transition: all 0.3s ease;
+      border-radius: 1px;
+    }
+    
+    .mobile-menu-button.active .hamburger-line:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+    
+    .mobile-menu-button.active .hamburger-line:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .mobile-menu-button.active .hamburger-line:nth-child(3) {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+    
+    /* モバイルナビゲーション */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: var(--bg-primary);
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .mobile-nav.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .mobile-nav li {
+      list-style: none;
+    }
+    
+    .mobile-nav a {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    
+    .mobile-nav a:hover {
+      color: var(--accent);
+    }
+    
     /* Main */
     main {
       flex: 1;
@@ -226,8 +322,17 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
         padding: 1rem;
       }
       
-      .nav-links {
-        gap: 1rem;
+      /* デスクトップナビを非表示、ハンバーガーボタンを表示 */
+      .desktop-nav {
+        display: none;
+      }
+      
+      .mobile-menu-button {
+        display: flex;
+      }
+      
+      .mobile-nav {
+        display: flex;
       }
       
       .site-icon {
@@ -246,5 +351,57 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       }
     }
   </style>
+  
+  <script>
+    // ハンバーガーメニューの制御
+    function initMobileMenu() {
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileNav = document.getElementById('mobileNav');
+      
+      if (mobileMenuButton && mobileNav) {
+        mobileMenuButton.addEventListener('click', () => {
+          const isActive = mobileNav.classList.contains('active');
+          
+          if (isActive) {
+            closeMobileMenu();
+          } else {
+            openMobileMenu();
+          }
+        });
+      }
+    }
+    
+    function openMobileMenu() {
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileNav = document.getElementById('mobileNav');
+      
+      if (mobileMenuButton && mobileNav) {
+        mobileMenuButton.classList.add('active');
+        mobileNav.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+    
+    function closeMobileMenu() {
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileNav = document.getElementById('mobileNav');
+      
+      if (mobileMenuButton && mobileNav) {
+        mobileMenuButton.classList.remove('active');
+        mobileNav.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+    
+    // ページ読み込み時に初期化
+    document.addEventListener('DOMContentLoaded', initMobileMenu);
+    
+    // ウィンドウサイズが変更された時にモバイルメニューを閉じる
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 768) {
+        closeMobileMenu();
+      }
+    });
+  </script>
 </body>
 </html>

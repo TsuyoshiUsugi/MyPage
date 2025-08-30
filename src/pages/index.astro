@@ -103,8 +103,7 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
         <span id="greeting-text">こんにちは</span>、<span class="accent">モルモ</span> です
       </h1>
       <p class="hero-description">
-        エンジニア・開発者として日々学んだことや作品を紹介しています。<br />
-        技術ブログやプロジェクト、趣味の音楽なども共有しています。
+        ゲーム制作の中で学んだ技術や作品を紹介しています。
       </p>
       <div class="hero-actions">
         <a href="/about" class="btn-primary">About Me</a>
@@ -662,10 +661,14 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
       gap: 0.5rem;
     }
     
-    .posts-grid,
+    .posts-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    
     .works-grid {
       grid-template-columns: 1fr;
-      gap: 1.5rem;
+      gap: 2rem;
     }
   }
 </style>
