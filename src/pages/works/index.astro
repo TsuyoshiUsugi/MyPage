@@ -80,7 +80,7 @@ const statusNames = {
                   <a href={work.data.demo} class="btn-secondary" target="_blank" rel="noopener noreferrer">
                     {work.data.demo.includes('steam') ? 'Steam で遊ぶ' : 
                      work.data.demo.includes('github') ? 'GitHub' : 
-                     work.data.demo.startsWith('/works/') ? 'プレイ' : 'デモを見る'}
+                     work.data.status === 'published' ? 'プレイする' : 'デモを見る'}
                   </a>
                 )}
                 {work.data.demo && work.data.status === 'coming-soon' && (
@@ -201,6 +201,12 @@ const statusNames = {
   .work-image {
     aspect-ratio: 16/9;
     overflow: hidden;
+  }
+  
+  .work-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
   
   .image-placeholder {

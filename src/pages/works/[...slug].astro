@@ -64,7 +64,7 @@ const categoryNames = {
         {demo && status === 'published' && (
           <a href={demo} class="btn-primary" target="_blank" rel="noopener noreferrer">
             {demo.includes('steam') ? 'Steam で遊ぶ' : 
-             demo.startsWith('/works/') ? 'プレイ' : 'デモを見る'}
+             status === 'published' ? 'プレイする' : 'デモを見る'}
           </a>
         )}
         {demo && status === 'coming-soon' && (
