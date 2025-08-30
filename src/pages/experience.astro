@@ -48,9 +48,7 @@ const sortedExperience = allExperience.sort((a, b) => {
                 <div class="experience-skills">
                   <h3>使用技術・スキル</h3>
                   <div class="skills-list">
-                    {exp.data.skills.flatMap(skill => 
-                      skill.split(',').map(s => s.trim())
-                    ).map(skill => (
+                    {exp.data.skills.map(skill => (
                       <span class="skill-tag">{skill}</span>
                     ))}
                   </div>

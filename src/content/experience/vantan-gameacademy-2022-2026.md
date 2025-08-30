@@ -5,7 +5,7 @@ startDate: 2022-04-01
 endDate: 2026-03-31
 current: true
 description: "ゲームプログラミングについて学んだ"
-skills: ["Unity,C#,Git,SourceTree,C++,UE5"]
+skills: ["Unity", "C#", "Git", "SourceTree", "C++", "UE5"]
 priority: 1
 ---
 
