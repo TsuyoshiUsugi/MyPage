@@ -11,7 +11,7 @@ const { title, description, pubDate, slug, tags } = Astro.props;
 const formattedDate = pubDate.toLocaleDateString('ja-JP');
 ---
 
-<article class="post-card">
+<article class="post-card" data-tags={tags ? tags.join(',') : ''}>
   <a href={`/blog/${slug}`} class="post-link">
     <div class="post-content">
       <div class="post-meta">

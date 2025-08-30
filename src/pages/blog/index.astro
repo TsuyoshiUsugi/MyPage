@@ -224,7 +224,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sor
   // タグフィルター機能
   document.addEventListener('DOMContentLoaded', () => {
     const tagButtons = document.querySelectorAll('.tag-btn');
-    const postCards = document.querySelectorAll('[data-tags]');
+    const postCards = document.querySelectorAll('.post-card[data-tags]');
     
     // データ属性をpostCardに追加する処理は、PostCardコンポーネントで実装される必要がある
     // ここでは基本的なフィルター機能の骨組みを提供
@@ -238,18 +238,39 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sor
         const selectedTag = button.getAttribute('data-tag');
         
         // カードのフィルタリング処理
+        let visibleCards = 0;
         postCards.forEach(card => {
           if (selectedTag === 'all') {
             card.style.display = 'block';
+            visibleCards++;
           } else {
             const cardTags = card.getAttribute('data-tags')?.split(',') || [];
             if (cardTags.includes(selectedTag)) {
               card.style.display = 'block';
+              visibleCards++;
             } else {
               card.style.display = 'none';
             }
           }
         });
+        
+        // 空の状態の表示/非表示
+        const postsGrid = document.querySelector('.posts-grid');
+        const emptyState = document.querySelector('.empty-state');
+        if (postsGrid && emptyState) {
+          if (visibleCards === 0) {
+            postsGrid.style.display = 'none';
+            emptyState.style.display = 'block';
+            emptyState.innerHTML = `
+              <div class="empty-icon">🔍</div>
+              <h3>「${selectedTag}」タグの記事がありません</h3>
+              <p>他のタグをお試しください</p>
+            `;
+          } else {
+            postsGrid.style.display = 'grid';
+            emptyState.style.display = 'none';
+          }
+        }
       });
     });
   });

@@ -39,7 +39,7 @@ jobs:
             process.exit(1);
           }
           
-          const API_URL = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=5&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
+          const API_URL = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=6&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
           
           async function updatePlaylist() {
             try {
