@@ -61,12 +61,31 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
     {allWorks.filter(work => work.data.image && work.data.status === 'published').length > 0 && (
       <div class="hero-background">
         <div class="carousel-container animate">
+          {/* 最初のセット */}
           {allWorks.filter(work => work.data.image && work.data.status === 'published').map((work, index) => (
             <div class="carousel-slide">
               <img src={work.data.image} alt={work.data.title} loading="lazy" />
             </div>
           ))}
-          {/* 画像を複製して継続的にループ */}
+          {/* 2つ目のセット（シームレスループ用） */}
+          {allWorks.filter(work => work.data.image && work.data.status === 'published').map((work, index) => (
+            <div class="carousel-slide">
+              <img src={work.data.image} alt={work.data.title} loading="lazy" />
+            </div>
+          ))}
+          {/* 3つ目のセット（シームレスループ用） */}
+          {allWorks.filter(work => work.data.image && work.data.status === 'published').map((work, index) => (
+            <div class="carousel-slide">
+              <img src={work.data.image} alt={work.data.title} loading="lazy" />
+            </div>
+          ))}
+          {/* 4つ目のセット（シームレスループ用） */}
+          {allWorks.filter(work => work.data.image && work.data.status === 'published').map((work, index) => (
+            <div class="carousel-slide">
+              <img src={work.data.image} alt={work.data.title} loading="lazy" />
+            </div>
+          ))}
+          {/* 5つ目のセット（シームレスループ用） */}
           {allWorks.filter(work => work.data.image && work.data.status === 'published').map((work, index) => (
             <div class="carousel-slide">
               <img src={work.data.image} alt={work.data.title} loading="lazy" />
@@ -211,6 +230,8 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
     width: 1000%;
     height: 100%;
     gap: 0;
+    margin: 0;
+    padding: 0;
   }
   
   .carousel-container.animate {
@@ -218,18 +239,23 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
   }
   
   .carousel-slide {
-    flex: 1;
+    flex: none;
+    width: 10%;
+    height: 100%;
     position: relative;
     overflow: hidden;
     margin: 0;
     padding: 0;
     border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .carousel-slide img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
     opacity: 0.6;
     display: block;
@@ -239,7 +265,7 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
   
   @keyframes carousel {
     0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    100% { transform: translateX(-20%); }
   }
 
   /* ヒーローセクション */
