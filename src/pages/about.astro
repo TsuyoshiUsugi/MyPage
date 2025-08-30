@@ -1,5 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// 経歴データを取得してソート
+const allExperience = await getCollection('experience');
+const sortedExperience = allExperience.sort((a, b) => {
+  const dateA = new Date(a.data.startDate).getTime();
+  const dateB = new Date(b.data.startDate).getTime();
+  if (dateA === dateB) {
+    return (b.data.priority || 0) - (a.data.priority || 0);
+  }
+  return dateB - dateA;
+});
 ---
 
 <BaseLayout 
@@ -78,36 +90,55 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <section class="experience-section">
       <h2>Experience & Learning</h2>
       <div class="timeline">
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <h3>株式会社Astran</h3>
-            <p class="timeline-date">現在</p>
-            <p>クライアントエンジニアとしてゲーム開発に従事しています。</p>
+        {sortedExperience.length > 0 ? (
+          sortedExperience.map(async (exp) => {
+            const { Content } = await exp.render();
+            const startDate = exp.data.startDate.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long' });
+            const endDate = exp.data.current ? '現在' : 
+              exp.data.endDate?.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long' }) || '';
+            
+            return (
+              <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                  <h3>{exp.data.title} - {exp.data.organization}</h3>
+                  <p class="timeline-date">{startDate}～{endDate}</p>
+                  <p>{exp.data.description}</p>
+                  
+                  {exp.data.skills && exp.data.skills.length > 0 && (
+                    <div class="experience-skills">
+                      <h4>使用技術・スキル</h4>
+                      <div class="skills-tags">
+                        {exp.data.skills.map(skill => (
+                          <span class="skill-tag">{skill}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div class="experience-details">
+                    <button class="toggle-details" type="button">
+                      <span class="toggle-text">主な活動内容を表示</span>
+                      <span class="toggle-icon">▼</span>
+                    </button>
+                    <div class="details-content" style="display: none;">
+                      <Content />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <h3>株式会社Astran</h3>
+              <p class="timeline-date">現在</p>
+              <p>クライアントエンジニアとしてゲーム開発に従事しています。</p>
+            </div>
           </div>
-        </div>
-        
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <h3>専門学校での学習</h3>
-            <p class="timeline-date">卒業</p>
-            <p>UnityとC#プログラミングを学び、17以上のゲームプロジェクトを制作しました。学内外のコンテストで以下の受賞歴があります：</p>
-            <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
-              <li>アクワイア協賛学内ゲームジャム優勝</li>
-              <li>サイバーエージェント主催プロトスプリントリーグ優勝</li>
-            </ul>
-          </div>
-        </div>
-        
-        <div class="timeline-item">
-          <div class="timeline-marker"></div>
-          <div class="timeline-content">
-            <h3>CATechLounge</h3>
-            <p class="timeline-date">メンバー</p>
-            <p>技術コミュニティのメンバーとして活動しています。</p>
-          </div>
-        </div>
+        )}
       </div>
     </section>
     
@@ -149,6 +180,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </section>
   </div>
 </BaseLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleButtons = document.querySelectorAll('.toggle-details');
+    
+    toggleButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const detailsContent = button.nextElementSibling;
+        const toggleText = button.querySelector('.toggle-text');
+        const isOpen = button.classList.contains('open');
+        
+        if (isOpen) {
+          // 閉じる
+          detailsContent.style.display = 'none';
+          toggleText.textContent = '主な活動内容を表示';
+          button.classList.remove('open');
+        } else {
+          // 開く
+          detailsContent.style.display = 'block';
+          toggleText.textContent = '主な活動内容を非表示';
+          button.classList.add('open');
+        }
+      });
+    });
+  });
+</script>
 
 <style>
   .about-container {
@@ -331,6 +388,95 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .timeline-content p:last-child {
     color: var(--text-secondary);
     line-height: 1.6;
+  }
+  
+  .experience-skills {
+    margin: 1rem 0;
+  }
+  
+  .experience-skills h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+  }
+  
+  .skills-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .skill-tag {
+    background: rgba(138, 180, 248, 0.1);
+    color: var(--accent);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .experience-details {
+    margin-top: 1rem;
+  }
+  
+  .toggle-details {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .toggle-details:hover {
+    background: rgba(138, 180, 248, 0.1);
+    border-color: var(--accent);
+  }
+  
+  .toggle-icon {
+    font-size: 0.75rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .toggle-details.open .toggle-icon {
+    transform: rotate(180deg);
+  }
+  
+  .details-content {
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-top: 1rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .details-content :global(h2),
+  .details-content :global(h3),
+  .details-content :global(h4) {
+    color: var(--text-primary);
+    margin: 1rem 0 0.5rem 0;
+  }
+  
+  .details-content :global(ul),
+  .details-content :global(ol) {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0;
+  }
+  
+  .details-content :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  
+  .details-content :global(a:hover) {
+    opacity: 0.8;
   }
   
   /* 興味・関心セクション */
