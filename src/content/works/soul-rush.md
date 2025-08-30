@@ -2,7 +2,7 @@
 title: "ソウルラッシュ"
 description: "Unityで制作した爽快感抜群のランアクションゲーム"
 category: "game"
-date: 2025-08-29
+date: 2025-08-30
 priority: 1
 technologies: ["Unity", "C#"]
 image: "/works/soul-rush-game/header.jpg"
