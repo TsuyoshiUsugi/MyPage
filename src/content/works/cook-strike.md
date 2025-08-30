@@ -2,8 +2,8 @@
 title: "クックストライク"
 description: "お料理シューティングゲーム"
 category: "game"
-date: 2023-08-30
-priority: 0
+date: 2025-08-29
+priority: 2
 technologies: ["Unity", "C#"]
 image: "/works/cook-strike-game/header.jpg"
 github: "https://github.com/TsuyoshiUsugi/CyberProto"
