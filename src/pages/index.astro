@@ -4,15 +4,43 @@ import PostCard from '../components/PostCard.astro';
 import NowPlaylist from '../components/NowPlaylist.astro';
 import { getCollection } from 'astro:content';
 
-// 最新のブログ記事3件を取得
+// 最新のブログ記事とWorks記事を合わせて3件取得
 const allPosts = await getCollection('blog');
-const latestPosts = allPosts
+const allWorks = await getCollection('works');
+
+// ブログとWorksを統一フォーマットに変換
+const blogItems = allPosts.map(post => ({
+  type: 'blog',
+  slug: post.slug,
+  title: post.data.title,
+  description: post.data.description,
+  date: post.data.pubDate,
+  priority: post.data.priority || 0,
+  tags: post.data.tags,
+  url: `/blog/${post.slug}/`
+}));
+
+const workItems = allWorks
+  .filter(work => work.data.status === 'published')
+  .map(work => ({
+    type: 'works',
+    slug: work.slug,
+    title: work.data.title,
+    description: work.data.description,
+    date: work.data.date,
+    priority: work.data.priority || 0,
+    tags: work.data.technologies,
+    url: `/works/${work.slug}/`
+  }));
+
+// 全てを合わせて日付・優先度でソート
+const latestPosts = [...blogItems, ...workItems]
   .sort((a, b) => {
-    const dateA = new Date(a.data.pubDate).getTime();
-    const dateB = new Date(b.data.pubDate).getTime();
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
     if (dateA === dateB) {
       // 同じ日付の場合は優先度で並び替え（数値が大きい方が後に表示）
-      return (a.data.priority || 0) - (b.data.priority || 0);
+      return a.priority - b.priority;
     }
     return dateB - dateA;
   })
@@ -25,6 +53,17 @@ const latestPosts = allPosts
 >
   <!-- ヒーローセクション -->
   <section class="hero">
+    <!-- 背景カルーセル -->
+    <div class="carousel-background">
+      <div class="carousel-container">
+        {allWorks.filter(work => work.data.image).map((work) => (
+          <div class="carousel-slide">
+            <img src={work.data.image} alt={work.data.title} loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </div>
+    
     <div class="hero-content">
       <h1 class="hero-title">
         こんにちは、<br />
@@ -50,14 +89,26 @@ const latestPosts = allPosts
     
     {latestPosts.length > 0 ? (
       <div class="posts-grid">
-        {latestPosts.map((post) => (
-          <PostCard
-            title={post.data.title}
-            description={post.data.description}
-            pubDate={post.data.pubDate}
-            slug={post.slug}
-            tags={post.data.tags}
-          />
+        {latestPosts.map((item) => (
+          <a href={item.url} class="post-item">
+            <article class="post-card">
+              <div class="post-meta">
+                <span class="post-type">{item.type === 'blog' ? 'Blog' : 'Works'}</span>
+                <time datetime={item.date.toISOString()}>
+                  {item.date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
+                </time>
+              </div>
+              <h3 class="post-title">{item.title}</h3>
+              <p class="post-description">{item.description}</p>
+              {item.tags && item.tags.length > 0 && (
+                <div class="post-tags">
+                  {item.tags.slice(0, 3).map(tag => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </article>
+          </a>
         ))}
       </div>
     ) : (
@@ -77,17 +128,46 @@ const latestPosts = allPosts
       <a href="/works" class="view-all">すべて見る →</a>
     </div>
     
-    <div class="works-grid">
-      <article class="work-card">
-        <div class="work-placeholder">
-          <span>🎮</span>
-        </div>
-        <div class="work-content">
-          <h3>Unity WebGLゲーム</h3>
-          <p>ブラウザで遊べるWebGLゲーム作品を公開予定です。</p>
-        </div>
-      </article>
-    </div>
+    {workItems.length > 0 ? (
+      <div class="works-grid">
+        {workItems.slice(0, 3).map((work) => (
+          <a href={work.url} class="work-card">
+            <div class="work-image">
+              {allWorks.find(w => w.slug === work.slug)?.data.image ? (
+                <img 
+                  src={allWorks.find(w => w.slug === work.slug)?.data.image} 
+                  alt={work.title} 
+                  loading="lazy" 
+                />
+              ) : (
+                <div class="work-placeholder">
+                  <span>
+                    {allWorks.find(w => w.slug === work.slug)?.data.category === 'game' ? '🎮' : 
+                     allWorks.find(w => w.slug === work.slug)?.data.category === 'web' ? '💻' : '📁'}
+                  </span>
+                </div>
+              )}
+            </div>
+            <div class="work-content">
+              <h3>{work.title}</h3>
+              <p>{work.description}</p>
+              {work.tags && work.tags.length > 0 && (
+                <div class="work-tags">
+                  {work.tags.slice(0, 3).map(tag => (
+                    <span class="tech-tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    ) : (
+      <div class="empty-works">
+        <div class="empty-icon">💼</div>
+        <p>作品を準備中です。近日公開予定！</p>
+      </div>
+    )}
   </section>
 
   <!-- AdSense 広告 -->
@@ -103,15 +183,61 @@ const latestPosts = allPosts
 </BaseLayout>
 
 <style>
+  /* 背景カルーセル */
+  .carousel-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+  }
+  
+  .carousel-container {
+    display: flex;
+    width: 500%;
+    height: 100%;
+    animation: carousel 30s infinite linear;
+  }
+  
+  .carousel-slide {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    opacity: 0.25;
+    filter: blur(1px);
+  }
+  
+  @keyframes carousel {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-20%); }
+  }
+
   /* ヒーローセクション */
   .hero {
+    position: relative;
     text-align: center;
     padding: 4rem 0 6rem 0;
+    overflow: hidden;
   }
   
   .hero-content {
+    position: relative;
+    z-index: 1;
     max-width: 600px;
     margin: 0 auto;
+    background: rgba(15, 17, 21, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 3rem 2rem;
   }
   
   .hero-title {
@@ -206,6 +332,74 @@ const latestPosts = allPosts
     gap: 2rem;
   }
   
+  .post-item {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .post-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.02);
+    transition: all 0.3s ease;
+    height: 100%;
+  }
+  
+  .post-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 8px 32px rgba(138, 180, 248, 0.1);
+  }
+  
+  .post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+  }
+  
+  .post-type {
+    background: var(--accent);
+    color: var(--bg-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-weight: 500;
+  }
+  
+  .post-meta time {
+    color: var(--text-secondary);
+  }
+  
+  .post-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-primary);
+  }
+  
+  .post-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  .post-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .tag {
+    background: rgba(138, 180, 248, 0.1);
+    color: var(--accent);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
   .empty-state {
     text-align: center;
     padding: 3rem 0;
@@ -219,11 +413,14 @@ const latestPosts = allPosts
   
   .works-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 2rem;
   }
   
   .work-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
     border: 1px solid var(--border);
     border-radius: 12px;
     overflow: hidden;
@@ -235,6 +432,17 @@ const latestPosts = allPosts
     transform: translateY(-4px);
     border-color: var(--accent);
     box-shadow: 0 8px 32px rgba(138, 180, 248, 0.1);
+  }
+  
+  .work-image {
+    aspect-ratio: 16/9;
+    overflow: hidden;
+  }
+  
+  .work-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   
   .work-placeholder {
@@ -254,11 +462,39 @@ const latestPosts = allPosts
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
+    color: var(--text-primary);
   }
   
   .work-content p {
     color: var(--text-secondary);
     line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  
+  .work-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .tech-tag {
+    background: rgba(138, 180, 248, 0.1);
+    color: var(--accent);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  .empty-works {
+    text-align: center;
+    padding: 3rem 0;
+    color: var(--text-secondary);
+  }
+  
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
   }
   
   /* レスポンシブ */

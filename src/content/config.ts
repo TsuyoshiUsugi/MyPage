@@ -1,4 +1,5 @@
 import { defineCollection, z } from 'astro:content';
+import experienceCollection from './experience';
 
 const blogCollection = defineCollection({
   type: 'content',
@@ -19,6 +20,7 @@ const worksCollection = defineCollection({
     description: z.string(),
     category: z.enum(['game', 'web', 'other']),
     date: z.date(),
+    priority: z.number().default(0),
     technologies: z.array(z.string()),
     image: z.string().optional(),
     github: z.string().optional(),
@@ -30,4 +32,5 @@ const worksCollection = defineCollection({
 export const collections = {
   blog: blogCollection,
   works: worksCollection,
+  experience: experienceCollection,
 };
