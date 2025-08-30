@@ -95,10 +95,12 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
       </div>
     )}
     
+    <!-- 透明オーバーレイフィルター -->
+    <div class="hero-overlay"></div>
+    
     <div class="hero-content">
       <h1 class="hero-title">
-        こんにちは、<br />
-        <span class="accent">モルモ</span> です
+        こんにちは、<span class="accent">モルモ</span> です
       </h1>
       <p class="hero-description">
         エンジニア・開発者として日々学んだことや作品を紹介しています。<br />
@@ -107,6 +109,9 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
       <div class="hero-actions">
         <a href="/about" class="btn-primary">About Me</a>
         <a href="/works" class="btn-secondary">Works</a>
+        <a href="https://twitter.com/TsuyoshiUsugi" class="btn-social" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://qiita.com/TsuyoshiUsugi" class="btn-social" target="_blank" rel="noopener noreferrer">Qiita</a>
+        <a href="https://github.com/TsuyoshiUsugi" class="btn-social" target="_blank" rel="noopener noreferrer">GitHub</a>
       </div>
     </div>
   </section>
@@ -276,9 +281,19 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
     overflow: hidden;
   }
   
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 0;
+  }
+  
   .hero-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     max-width: 500px;
     margin: 0 auto;
     padding: 3rem 2rem;
@@ -343,6 +358,25 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
   .btn-secondary:hover {
     background: var(--accent);
     color: var(--bg-primary);
+  }
+  
+  .btn-social {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border-color: var(--border);
+  }
+  
+  .btn-social:hover {
+    background: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
   }
   
   /* セクション共通 */

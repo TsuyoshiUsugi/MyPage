@@ -15,7 +15,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <meta charset="UTF-8" />
   <meta name="description" content={description} />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="/favicon.png" />
+  <!-- Favicon for various devices and browsers -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+  <link rel="shortcut icon" href="/favicon.png" />
   <meta name="generator" content={Astro.generator} />
   
   <!-- OGP -->
@@ -47,7 +51,10 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   <header>
     <nav>
       <div class="nav-container">
-        <a href="/" class="logo">モルモ's Tech? ブログ</a>
+        <a href="/" class="logo">
+          <img src="/assets/profile-icon.png" alt="Mormo icon" class="site-icon" />
+          <span class="logo-text">モルモ's Tech? ブログ</span>
+        </a>
         <ul class="nav-links">
           <li><a href="/">Home</a></li>
           <li><a href="/blog">Blog</a></li>
@@ -120,10 +127,27 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     }
     
     .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
       font-size: 1.5rem;
       font-weight: 700;
       color: var(--accent);
       text-decoration: none;
+    }
+    
+    .site-icon {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border-radius: 9999px;
+    }
+    
+    .logo-text {
+      max-width: 48vw;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
     
     .nav-links {
@@ -199,6 +223,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       
       .nav-links {
         gap: 1rem;
+      }
+      
+      .site-icon {
+        width: 32px;
+        height: 32px;
       }
       
       main {
