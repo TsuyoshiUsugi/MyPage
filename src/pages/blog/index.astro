@@ -53,6 +53,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sor
               pubDate={post.data.pubDate}
               slug={post.slug}
               tags={post.data.tags}
+              ogImage={post.data.ogImage}
             />
           ))}
         </div>

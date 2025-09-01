@@ -17,6 +17,7 @@ const blogItems = allPosts.map(post => ({
   date: post.data.pubDate,
   priority: post.data.priority || 0,
   tags: post.data.tags,
+  ogImage: post.data.ogImage,
   url: `/blog/${post.slug}/`
 }));
 

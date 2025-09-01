@@ -6,6 +6,10 @@ export default defineConfig({
   base: '/',
   output: 'static',
   integrations: [mdx()],
+  markdown: {
+    // MDファイルでもコンポーネントが使えるように
+    extendDefaultPlugins: true,
+  },
   build: {
     assets: 'assets'
   }
