@@ -136,21 +136,28 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
         {latestPosts.map((item) => (
           <a href={item.url} class="post-item">
             <article class="post-card">
-              <div class="post-meta">
-                <span class="post-type">{item.type === 'blog' ? 'Blog' : 'Works'}</span>
-                <time datetime={item.date.toISOString()}>
-                  {item.date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
-                </time>
-              </div>
-              <h3 class="post-title">{item.title}</h3>
-              <p class="post-description">{item.description}</p>
-              {item.tags && item.tags.length > 0 && (
-                <div class="post-tags">
-                  {item.tags.slice(0, 3).map(tag => (
-                    <span class="tag">{tag}</span>
-                  ))}
+              {item.ogImage && (
+                <div class="post-image">
+                  <img src={item.ogImage} alt={item.title} loading="lazy" />
                 </div>
               )}
+              <div class="post-content">
+                <div class="post-meta">
+                  <span class="post-type">{item.type === 'blog' ? 'Blog' : 'Works'}</span>
+                  <time datetime={item.date.toISOString()}>
+                    {item.date.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </time>
+                </div>
+                <h3 class="post-title">{item.title}</h3>
+                <p class="post-description">{item.description}</p>
+                {item.tags && item.tags.length > 0 && (
+                  <div class="post-tags">
+                    {item.tags.slice(0, 3).map(tag => (
+                      <span class="tag">{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
             </article>
           </a>
         ))}
@@ -453,7 +460,7 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
   .post-card {
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 1.5rem;
+    overflow: hidden;
     background: rgba(255, 255, 255, 0.02);
     transition: all 0.3s ease;
     height: 100%;
@@ -463,6 +470,23 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
     transform: translateY(-4px);
     border-color: var(--accent);
     box-shadow: 0 8px 32px rgba(138, 180, 248, 0.1);
+  }
+  
+  .post-image {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+  }
+  
+  .post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .post-content {
+    padding: 1.5rem;
   }
   
   .post-meta {
@@ -670,6 +694,14 @@ console.log('Published works with images:', allWorks.filter(work => work.data.im
     
     .post-card {
       margin-bottom: 1rem;
+    }
+    
+    .post-image {
+      height: 120px;
+    }
+    
+    .post-content {
+      padding: 1.25rem;
     }
     
     .works-grid {
