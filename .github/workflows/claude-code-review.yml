@@ -1,9 +1,9 @@
-name: Claude Code Review
+name: Claude Code Review (JA)
 
 on:
   pull_request:
-    types: [opened, synchronize]
-    # Optional: Only run on specific file changes
+    types: [opened, synchronize, reopened]
+    # 必要なら対象ファイルを絞る
     # paths:
     #   - "src/**/*.ts"
     #   - "src/**/*.tsx"
@@ -12,19 +12,13 @@ on:
 
 jobs:
   claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
-    
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
-      issues: read
+      pull-requests: write   # ← コメント投稿に必要
+      issues: write          # ← 場合によりIssueにも投稿するなら
       id-token: write
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -36,19 +30,31 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+
+          # ★ 日本語での自動レビュー指示
           prompt: |
-            Please review this pull request and provide feedback on:
-            - Code quality and best practices
-            - Potential bugs or issues
-            - Performance considerations
-            - Security concerns
-            - Test coverage
-            
-            Use the repository's CLAUDE.md for guidance on style and conventions. Be constructive and helpful in your feedback.
+            /review
+            以下の観点で、このプルリクエストを**日本語**でレビューしてください。
+            - コード品質・ベストプラクティス
+            - バグの可能性や見落とし
+            - パフォーマンス上の懸念
+            - セキュリティ上の懸念
+            - テスト観点（不足している観点の指摘）
 
-            Use `gh pr comment` with your Bash tool to leave your review as a comment on the PR.
-          
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://docs.anthropic.com/en/docs/claude-code/sdk#command-line for available options
-          claude_args: '--allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"'
+            出力フォーマット：
+            # 概要
+            # 良い点
+            # 改善点
+            # 推奨修正（High / Medium / Low）
+            # 参考パッチ（あれば最小差分）
 
+            可能な限りリポジトリ直下の CLAUDE.md の方針に従ってください。
+            返信は**簡潔な日本語**で、見出し＋箇条書きを基本とし、根拠や再現手順があれば付記してください。
+
+            最後に Bash の `gh pr comment` を用いて、このレビュー結果を当該PRにコメントとして投稿してください。
+
+          # 追加の実行オプション
+          claude_args: |
+            --system-prompt "常に日本語で回答。冗長にせず、見出しと箇条書き中心。セキュリティ/パフォーマンス/可読性/テストを優先。必要に応じて最小差分のパッチを提示。"
+            --max-turns 5
+            --allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"
