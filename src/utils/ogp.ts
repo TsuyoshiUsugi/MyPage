@@ -44,11 +44,48 @@ function isAllowedURL(url: string): boolean {
   }
 }
 
+// YouTube動画ID抽出関数
+function extractYouTubeId(url: string): string | null {
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+    /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    /(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /(?:youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) {
+      return match[1];
+    }
+  }
+  return null;
+}
+
+// YouTube専用のOGPデータ生成
+function createYouTubeOGP(videoId: string): OGPData {
+  return {
+    title: 'YouTube動画',
+    description: 'YouTube動画です',
+    image: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+    siteName: 'YouTube'
+  };
+}
+
 export async function fetchOGP(url: string): Promise<OGPData> {
   // URL検証
   if (!isAllowedURL(url)) {
     console.warn(`URL not allowed: ${url}`);
     return {};
+  }
+
+  // YouTubeの場合は専用処理
+  const isYouTube = url.includes('youtube.com') || url.includes('youtu.be');
+  if (isYouTube) {
+    const videoId = extractYouTubeId(url);
+    if (videoId) {
+      return createYouTubeOGP(videoId);
+    }
   }
 
   try {
