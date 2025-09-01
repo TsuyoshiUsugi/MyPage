@@ -23,7 +23,12 @@ const cardImage = image || ogpData.image;
   <a href={url} target="_blank" rel="noopener noreferrer">
     {cardImage && (
       <div class="image-container">
-        <img src={cardImage} alt={cardTitle} loading="lazy" />
+        <img 
+          src={cardImage} 
+          alt={cardTitle} 
+          loading="lazy" 
+          onError="this.parentElement.style.display='none'"
+        />
       </div>
     )}
     <div class="content">
