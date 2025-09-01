@@ -1,0 +1,112 @@
+---
+export interface Props {
+  src: string;
+  title?: string;
+  width?: string;
+  height?: string;
+  poster?: string; // サムネイル画像
+  autoplay?: boolean;
+  controls?: boolean;
+}
+
+const { 
+  src, 
+  title = "動画", 
+  width = "100%", 
+  height = "auto",
+  poster,
+  autoplay = false,
+  controls = true 
+} = Astro.props;
+
+// YouTube URLの判定
+const isYouTube = src.includes('youtube.com') || src.includes('youtu.be');
+
+// YouTube IDを抽出（より堅牢なパターンマッチング）
+const getYouTubeId = (url: string): string | null => {
+  const patterns = [
+    // 標準的な watch URL
+    /(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+    // 短縮URL
+    /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    // 埋め込み用URL
+    /(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    // YouTube Shorts
+    /(?:youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+    // チャンネルのライブ配信など
+    /(?:youtube\.com\/.*[?&]v=)([a-zA-Z0-9_-]{11})/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match && match[1]) {
+      return match[1];
+    }
+  }
+  
+  return null;
+};
+
+const youtubeId = isYouTube ? getYouTubeId(src) : null;
+---
+
+<div class="video-container">
+  {isYouTube && youtubeId ? (
+    <!-- YouTube埋め込み -->
+    <iframe
+      src={`https://www.youtube.com/embed/${youtubeId}`}
+      title={title}
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      class="youtube-video"
+    ></iframe>
+  ) : (
+    <!-- ローカル動画 -->
+    <video 
+      controls={controls}
+      autoplay={autoplay}
+      poster={poster}
+      style={`width: ${width}; height: ${height};`}
+      class="local-video"
+    >
+      <source src={src} type="video/mp4">
+      <source src={src} type="video/webm">
+      お使いのブラウザは動画再生に対応していません。
+    </video>
+  )}
+</div>
+
+<style>
+.video-container {
+  margin: 2rem 0;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.youtube-video {
+  width: 100%;
+  max-width: 800px;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.local-video {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+  .video-container {
+    margin: 1.5rem -1rem;
+  }
+  
+  .youtube-video,
+  .local-video {
+    border-radius: 0;
+  }
+}
+</style>

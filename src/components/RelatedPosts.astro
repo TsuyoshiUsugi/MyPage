@@ -68,6 +68,11 @@ if (relatedItems.length === 0) {
       return (
         <article class="related-post-card">
           <a href={item.url} class="related-post-link">
+            {(item.data.ogImage || item.data.image) && (
+              <div class="related-post-image">
+                <img src={item.data.ogImage || item.data.image} alt={item.data.title} loading="lazy" />
+              </div>
+            )}
             <div class="related-post-content">
               <div class="related-post-meta">
                 <time class="related-post-date" datetime={item.date.toISOString()}>
@@ -143,8 +148,24 @@ if (relatedItems.length === 0) {
     display: block;
     text-decoration: none;
     color: inherit;
-    padding: 1.5rem;
     height: 100%;
+  }
+  
+  .related-post-image {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+  }
+  
+  .related-post-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  .related-post-content {
+    padding: 1.5rem;
   }
   
   .related-post-meta {
@@ -212,8 +233,12 @@ if (relatedItems.length === 0) {
       font-size: 1.25rem;
     }
     
-    .related-post-link {
+    .related-post-content {
       padding: 1.25rem;
+    }
+    
+    .related-post-image {
+      height: 120px;
     }
     
     .related-post-meta {
