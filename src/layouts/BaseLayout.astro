@@ -44,13 +44,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
   
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@UT_00006" />
+  <meta name="twitter:creator" content="@UT_00006" />
   <meta name="twitter:title" content={pageTitle} />
   <meta name="twitter:description" content={description} />
   <meta name="twitter:image" content={fullOgImage} />
+  <meta name="twitter:image:alt" content={pageTitle} />
   <meta name="twitter:image:width" content="1200" />
   <meta name="twitter:image:height" content="630" />
-  <meta name="twitter:site" content="@your_twitter_handle" />
-  <meta name="twitter:creator" content="@your_twitter_handle" />
   
   <!-- 追加のソーシャルメディア対応 -->
   <meta property="article:author" content="モルモ" />
