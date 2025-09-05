@@ -28,14 +28,7 @@ jobs:
         id: claude-review
         uses: anthropics/claude-code-action@v1
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-
-          prompt: |
-            このプルリクエストを日本語でコードレビューしてください。以下の観点を重視してください：
-            - コード品質とベストプラクティス
-            - バグやセキュリティの懸念
-            - パフォーマンスの問題
-            - テストの不足
-
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: "/review"
           claude_args: |
             --system-prompt "常に日本語で回答してください。簡潔で読みやすい形式で、見出しと箇条書きを使用してください。"
