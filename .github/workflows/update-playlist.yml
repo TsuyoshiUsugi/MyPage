@@ -46,12 +46,12 @@ jobs:
             process.exit(1);
           }
           
-          const API_URL = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=6&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
+          const PLAYLIST_API_URL = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=6&playlistId=${PLAYLIST_ID}&key=${API_KEY}`;
           
           async function updatePlaylist() {
             try {
               console.log('Fetching playlist data...');
-              const response = await fetch(API_URL);
+              const response = await fetch(PLAYLIST_API_URL);
               const data = await response.json();
               
               if (!response.ok) {
@@ -59,14 +59,32 @@ jobs:
                 process.exit(1);
               }
               
-              const playlistItems = data.items.map(item => ({
-                id: item.id,
-                title: item.snippet.title,
-                channelTitle: item.snippet.channelTitle,
-                thumbnail: item.snippet.thumbnails.medium.url,
-                publishedAt: item.snippet.publishedAt,
-                videoId: item.snippet.resourceId.videoId
-              }));
+              // 動画IDを取得
+              const videoIds = data.items.map(item => item.snippet.resourceId.videoId);
+              
+              // 各動画の詳細情報を取得（実際のチャンネル名のため）
+              console.log('Fetching video details for actual channel names...');
+              const videoDetailsUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoIds.join(',')}&key=${API_KEY}`;
+              const videoDetailsResponse = await fetch(videoDetailsUrl);
+              const videoDetailsData = await videoDetailsResponse.json();
+              
+              if (!videoDetailsResponse.ok) {
+                console.error('Video Details API Error:', videoDetailsData);
+                process.exit(1);
+              }
+              
+              // プレイリストアイテムと動画詳細をマージ
+              const playlistItems = data.items.map(item => {
+                const videoDetail = videoDetailsData.items.find(video => video.id === item.snippet.resourceId.videoId);
+                return {
+                  id: item.id,
+                  title: item.snippet.title,
+                  channelTitle: videoDetail ? videoDetail.snippet.channelTitle : item.snippet.channelTitle, // 実際のチャンネル名を使用
+                  thumbnail: item.snippet.thumbnails.medium.url,
+                  publishedAt: item.snippet.publishedAt,
+                  videoId: item.snippet.resourceId.videoId
+                };
+              });
               
               // publicディレクトリが存在しない場合は作成
               const publicDir = path.join(process.cwd(), 'public');
