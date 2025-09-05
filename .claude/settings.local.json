@@ -12,6 +12,7 @@
       "Bash(npx astro:*)",
       "WebFetch(domain:youtu.be)",
       "WebFetch(domain:www.youtube.com)",
+      "Read(/C:\\Users\\qesul\\Documents\\MyPage\\.github\\workflows/**)",
       "Read(/C:\\Users\\qesul\\Documents\\MyPage\\.github\\workflows/**)"
     ],
     "deny": [
