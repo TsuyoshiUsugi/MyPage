@@ -6,6 +6,12 @@ on:
     - cron: '0 0 * * *'
   workflow_dispatch:
     # 手動実行も可能
+    inputs:
+      force_update:
+        description: 'Force update playlist even if no changes detected'
+        required: false
+        default: 'false'
+        type: boolean
 
 permissions:
   contents: write
