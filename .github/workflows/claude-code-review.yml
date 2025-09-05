@@ -15,8 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: write   # ← コメント投稿に必要
-      issues: write          # ← 場合によりIssueにも投稿するなら
+      pull-requests: write
       id-token: write
 
     steps:
@@ -31,30 +30,12 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
 
-          # ★ 日本語での自動レビュー指示
           prompt: |
-            /review
-            以下の観点で、このプルリクエストを**日本語**でレビューしてください。
-            - コード品質・ベストプラクティス
-            - バグの可能性や見落とし
-            - パフォーマンス上の懸念
-            - セキュリティ上の懸念
-            - テスト観点（不足している観点の指摘）
+            このプルリクエストを日本語でコードレビューしてください。以下の観点を重視してください：
+            - コード品質とベストプラクティス
+            - バグやセキュリティの懸念
+            - パフォーマンスの問題
+            - テストの不足
 
-            出力フォーマット：
-            # 概要
-            # 良い点
-            # 改善点
-            # 推奨修正（High / Medium / Low）
-            # 参考パッチ（あれば最小差分）
-
-            可能な限りリポジトリ直下の CLAUDE.md の方針に従ってください。
-            返信は**簡潔な日本語**で、見出し＋箇条書きを基本とし、根拠や再現手順があれば付記してください。
-
-            最後に Bash の `gh pr comment` を用いて、このレビュー結果を当該PRにコメントとして投稿してください。
-
-          # 追加の実行オプション
           claude_args: |
-            --system-prompt "常に日本語で回答。冗長にせず、見出しと箇条書き中心。セキュリティ/パフォーマンス/可読性/テストを優先。必要に応じて最小差分のパッチを提示。"
-            --max-turns 5
-            --allowed-tools "Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*)"
+            --system-prompt "常に日本語で回答してください。簡潔で読みやすい形式で、見出しと箇条書きを使用してください。"
