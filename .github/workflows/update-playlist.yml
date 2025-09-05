@@ -176,6 +176,20 @@ jobs:
           # Enable auto-merge with squash and delete branch
           gh pr merge ${{ steps.set-branch-name.outputs.branch_name }} --auto --squash --delete-branch
       
+      - name: Wait for PR merge and trigger deploy
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Waiting for PR to be merged..."
+          sleep 30
+          
+          # Trigger deployment workflow
+          echo "Triggering deployment workflow..."
+          gh workflow run deploy.yml
+          
+          echo "Playlist updated and deployment triggered successfully!"
+      
       - name: No changes detected
         if: steps.verify-changed-files.outputs.changed == 'false'
         run: echo "No changes in playlist data detected."
