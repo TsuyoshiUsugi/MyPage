@@ -139,8 +139,16 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sor
   
   .posts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 2rem;
+    max-width: 1200px;
+    justify-items: start;
+  }
+  
+  /* 記事カードの最大幅を制限 */
+  .posts-grid > :global(.post-card) {
+    max-width: 500px;
+    width: 100%;
   }
   
   /* 空の状態 */

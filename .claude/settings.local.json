@@ -16,7 +16,11 @@
       "Read(/C:\\Users\\qesul\\Documents\\MyPage\\.github\\workflows/**)",
       "Read(/C:\\Users\\qesul\\Documents\\MyPage\\.github\\workflows/**)",
       "Read(/C:\\Users\\qesul\\Documents\\MyPage\\.github\\workflows/**)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Read(/C:\\Users\\qesul\\Documents\\MyPage\\src\\pages/**)",
+      "Read(/C:\\Users\\qesul\\Documents\\MyPage\\src\\pages/**)",
+      "Read(/C:\\Users\\qesul\\Documents\\MyPage\\src\\pages\\blog/**)"
     ],
     "deny": [
       "Bash(sudo:*)",
