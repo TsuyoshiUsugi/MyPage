@@ -142,13 +142,16 @@ jobs:
           # Create PR using GitHub CLI
           gh pr create \
             --title "Update YouTube playlist data [automated]" \
-            --body "This PR updates the YouTube playlist data automatically.
+            --body "$(cat <<'PR_BODY'
+This PR updates the YouTube playlist data automatically.
 
-## Changes
+**Changes**
 - Updated \`public/data/playlist.json\` with latest playlist items
 
-## Auto-merge
-This PR will be automatically merged after creation." \
+**Auto-merge**
+This PR will be automatically merged after creation.
+PR_BODY
+)" \
             --base master \
             --head ${{ steps.set-branch-name.outputs.branch_name }}
       
