@@ -127,6 +127,7 @@ jobs:
         if: steps.verify-changed-files.outputs.changed == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_BODY: "This PR updates the YouTube playlist data automatically."
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -142,16 +143,7 @@ jobs:
           # Create PR using GitHub CLI
           gh pr create \
             --title "Update YouTube playlist data [automated]" \
-            --body "$(cat <<'PR_BODY'
-This PR updates the YouTube playlist data automatically.
-
-**Changes**
-- Updated \`public/data/playlist.json\` with latest playlist items
-
-**Auto-merge**
-This PR will be automatically merged after creation.
-PR_BODY
-)" \
+            --body "$PR_BODY" \
             --base master \
             --head ${{ steps.set-branch-name.outputs.branch_name }}
       
