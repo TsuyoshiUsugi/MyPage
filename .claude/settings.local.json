@@ -22,7 +22,8 @@
       "Read(/C:\\Users\\qesul\\Documents\\MyPage\\src\\pages/**)",
       "Read(/C:\\Users\\qesul\\Documents\\MyPage\\src\\pages\\blog/**)",
       "Bash(npm i:*)",
-      "Bash(npm search:*)"
+      "Bash(npm search:*)",
+      "Bash(gh workflow run:*)"
     ],
     "deny": [
       "Bash(sudo:*)",
