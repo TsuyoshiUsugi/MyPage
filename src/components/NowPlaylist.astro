@@ -11,26 +11,17 @@ interface PlaylistItem {
 let playlistData: PlaylistItem[] = [];
 
 try {
-  // 開発環境とプロダクション環境の判定
-  const isDev = import.meta.env.DEV;
+  // 統一的なアプローチ：常にローカルファイルから読み込み
+  const fs = await import('fs');
+  const path = await import('path');
+  const filePath = path.join(process.cwd(), 'public', 'data', 'playlist.json');
   
-  if (isDev) {
-    // 開発環境：ローカルファイルから読み込み
-    const fs = await import('fs');
-    const path = await import('path');
-    const filePath = path.join(process.cwd(), 'public', 'data', 'playlist.json');
-    
-    if (fs.existsSync(filePath)) {
-      const fileContent = fs.readFileSync(filePath, 'utf-8');
-      playlistData = JSON.parse(fileContent);
-    }
+  if (fs.existsSync(filePath)) {
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    playlistData = JSON.parse(fileContent);
+    console.log('プレイリストデータを読み込み:', playlistData.length, '件');
   } else {
-    // プロダクション環境：HTTPリクエスト
-    const siteUrl = import.meta.env.SITE || 'https://morumoru.jp';
-    const response = await fetch(`${siteUrl}/data/playlist.json`);
-    if (response.ok) {
-      playlistData = await response.json();
-    }
+    console.warn('プレイリストファイルが見つかりません:', filePath);
   }
 } catch (error) {
   console.error('プレイリストの取得に失敗:', error);
@@ -180,13 +171,51 @@ try {
 </style>
 
 <script define:vars={{ siteUrl: import.meta.env.SITE || 'https://morumoru.jp' }}>
-  // クライアントサイドでプレイリストデータを再取得
+  // クライアントサイドでプレイリストデータを再取得して表示を更新
   document.addEventListener('DOMContentLoaded', async () => {
+    const playlistGrid = document.querySelector('.playlist-grid');
+    const loadingElement = document.querySelector('.playlist-loading');
+    
+    if (!playlistGrid) return;
+    
     try {
-      const response = await fetch(`${siteUrl}/data/playlist.json`);
+      // キャッシュ回避のためにタイムスタンプを追加
+      const timestamp = new Date().getTime();
+      const response = await fetch(`${siteUrl}/data/playlist.json?t=${timestamp}`);
+      
       if (response.ok) {
         const data = await response.json();
-        // プレイリストが空の場合の処理は既にHTMLに含まれている
+        
+        // プレイリストが取得できた場合、表示を更新
+        if (data && data.length > 0) {
+          const playlistHTML = data.slice(0, 6).map(item => `
+            <article class="playlist-item">
+              <a href="https://www.youtube.com/watch?v=${item.videoId}"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="playlist-link">
+                <div class="thumbnail">
+                  <img src="${item.thumbnail}" 
+                       alt="${item.title}"
+                       loading="lazy"
+                       width="320"
+                       height="180" />
+                </div>
+                <div class="item-content">
+                  <h3 class="item-title">${item.title}</h3>
+                  <p class="item-channel">${item.channelTitle}</p>
+                </div>
+              </a>
+            </article>
+          `).join('');
+          
+          playlistGrid.innerHTML = playlistHTML;
+          
+          // ローディング表示を隠す
+          if (loadingElement) {
+            loadingElement.style.display = 'none';
+          }
+        }
       }
     } catch (error) {
       console.error('プレイリストの取得に失敗:', error);
