@@ -188,35 +188,56 @@ try {
         
         // プレイリストが取得できた場合、表示を更新
         if (data && data.length > 0) {
-          // HTMLエスケープ関数
-          const escapeHtml = (text) => {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-          };
+          // 既存のアイテムをクリア
+          playlistGrid.innerHTML = '';
           
-          const playlistHTML = data.slice(0, 6).map(item => `
-            <article class="playlist-item">
-              <a href="https://www.youtube.com/watch?v=${escapeHtml(item.videoId)}"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 class="playlist-link">
-                <div class="thumbnail">
-                  <img src="${escapeHtml(item.thumbnail)}" 
-                       alt="${escapeHtml(item.title)}"
-                       loading="lazy"
-                       width="320"
-                       height="180" />
-                </div>
-                <div class="item-content">
-                  <h3 class="item-title">${escapeHtml(item.title)}</h3>
-                  <p class="item-channel">${escapeHtml(item.channelTitle)}</p>
-                </div>
-              </a>
-            </article>
-          `).join('');
-          
-          playlistGrid.innerHTML = playlistHTML;
+          // 各プレイリストアイテムのDOM要素を作成
+          data.slice(0, 6).forEach(item => {
+            // article要素を作成
+            const article = document.createElement('article');
+            article.className = 'playlist-item';
+            
+            // a要素（リンク）を作成
+            const link = document.createElement('a');
+            link.href = `https://www.youtube.com/watch?v=${item.videoId}`;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            link.className = 'playlist-link';
+            
+            // サムネイル部分を作成
+            const thumbnailDiv = document.createElement('div');
+            thumbnailDiv.className = 'thumbnail';
+            
+            const img = document.createElement('img');
+            img.src = item.thumbnail;
+            img.alt = item.title;
+            img.loading = 'lazy';
+            img.width = 320;
+            img.height = 180;
+            
+            thumbnailDiv.appendChild(img);
+            
+            // コンテンツ部分を作成
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'item-content';
+            
+            const title = document.createElement('h3');
+            title.className = 'item-title';
+            title.textContent = item.title;
+            
+            const channel = document.createElement('p');
+            channel.className = 'item-channel';
+            channel.textContent = item.channelTitle;
+            
+            contentDiv.appendChild(title);
+            contentDiv.appendChild(channel);
+            
+            // 要素を組み立て
+            link.appendChild(thumbnailDiv);
+            link.appendChild(contentDiv);
+            article.appendChild(link);
+            playlistGrid.appendChild(article);
+          });
           
           // ローディング表示を隠す
           if (loadingElement) {
