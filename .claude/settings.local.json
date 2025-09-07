@@ -20,7 +20,9 @@
       "Bash(git push:*)",
       "Read(/C:\\Users\\qesul\\Documents\\MyPage\\src\\pages/**)",
       "Read(/C:\\Users\\qesul\\Documents\\MyPage\\src\\pages/**)",
-      "Read(/C:\\Users\\qesul\\Documents\\MyPage\\src\\pages\\blog/**)"
+      "Read(/C:\\Users\\qesul\\Documents\\MyPage\\src\\pages\\blog/**)",
+      "Bash(npm i:*)",
+      "Bash(npm search:*)"
     ],
     "deny": [
       "Bash(sudo:*)",

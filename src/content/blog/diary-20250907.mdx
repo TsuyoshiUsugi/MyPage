@@ -1,10 +1,10 @@
 ---
-title: "PlayableとAnimationRigの併用"
-description: "PlayableとAnimationRigを併用する際に詰まったことなどを記事にしました。"
+title: "PlayableとAnimationRiggingの併用"
+description: "PlayableとAnimationRiggingを併用する際に詰まったことなどを記事にしました。"
 pubDate: 2025-09-07
 priority: 0
-tags: ["記事", "Unity"]
-ogImage: "/images/blog/diary-20250902-og.jpg"
+tags: ["記事", "Unity", "C#"]
+ogImage: "/images/blog/diary-20250907-og.jpg"
 ---
 
 import LinkCard from '../../components/LinkCard.astro';
@@ -26,7 +26,7 @@ Playable
 <LinkCard url="https://docs.unity3d.com/ja/2022.3/Manual/Playables.html" />
 <LinkCard url="https://zenn.dev/allways/articles/5b9ef33032d5fa" />
 <LinkCard url="https://shibuya24.info/entry/unity-playable-start" />
-AnimationRiggin  
+AnimationRigging  
 <LinkCard url="https://www.youtube.com/watch?v=pml41GD8Ub4" />
 
 ## 3.AnimatorとPlayableどっちがいいのか
@@ -43,6 +43,13 @@ AnimationRiggin
 ## 4. 問題
 本題です。
 「併用するとRiggingのTargetやhintが動かせない」という問題が起きました。
+
+
+  <VideoEmbed
+    src="https://youtu.be/7DW-2HpMLv0"
+    title="Targetが動かせない"
+  />
+
 
 ## 5. 原因と対処
 - RigをPlayableGraphに接続していなかった
@@ -72,15 +79,17 @@ Playableの場合、Animatorのあるオブジェクトの子にすると座標�
 ### 最終的な処理の実行順
 
 ```mermaid
+%%{init: { "flowchart": { "htmlLabels": false }, "themeVariables": { "nodePadding": "10px 36px" } }}%%
 flowchart TB
-  A["Base Animation"]
-  B["Rig Chain - Constraints / IK"]
-  C["AnimationPlayableOutput - Rig(SortingOrderの値が大きいので後から適用)"]
-  D["Animator - Final Pose"]
+  A["<div style='width:160px;text-align:center'>Base Animation</div>"]
+  B["<div style='width:260px;text-align:center'>Rig Chain - Constraints / IK</div>"]
+  C["<div style='width:280px;text-align:center'>AnimationPlayableOutput - Rig<br/>(SortingOrder が大きいので後から適用)</div>"]
+  D["<div style='width:180px;text-align:center'>Animator - Final Pose</div>"]
 
-  A -->|"現状のアニメーションなどが適用された状態の入力"| B
+  A -->|"PreviousInputs (ベースの結果)"| B
   B --> C
   C --> D
+
 ```
 
 
