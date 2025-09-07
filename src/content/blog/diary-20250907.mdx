@@ -27,21 +27,20 @@ Playable
 <LinkCard url="https://zenn.dev/allways/articles/5b9ef33032d5fa" />
 <LinkCard url="https://shibuya24.info/entry/unity-playable-start" />
 AnimationRiggin  
-<VideoEmbed src="https://www.youtube.com/watch?v=pml41GD8Ub4" />
+<LinkCard url="https://www.youtube.com/watch?v=pml41GD8Ub4" />
 
 ## 3.AnimatorとPlayableどっちがいいのか
 今回初めてがっつりPlayableを触って考えたのですが、モーションが膨大になったり遷移条件が複雑になってくるならPlayableを使ってもイイかなと思いました。  
 回りでは、Animatorはすぐ複雑になるからよくない！みたいな意見を聞くこともあるのですが、以下の動画の通りにやれば大体は解決するのではないかなと思っています。
-
-<VideoEmbed src="https://youtu.be/eEm0TmfCGFU" />
-
+<LinkCard url="https://www.youtube.com/watch?v=eEm0TmfCGFU" />
 ただ、Playableのメリットとして  
 「コード上で管理できてわかりやすい」  
 「animationの待機や現在のアニメーションの取得、ブレンドなどを手軽にできる」  
 のはAnimatorにない良さかなと思いました。  
 リッチなアニメーションのゲームを作るには、こちらを使った方がいいような気がします。
 
-## 4. 問題 {#problem}
+<a id="problem"></a>
+## 4. 問題
 本題です。
 「併用するとRiggingのTargetやhintが動かせない」という問題が起きました。
 
@@ -73,7 +72,6 @@ Playableの場合、Animatorのあるオブジェクトの子にすると座標�
 ### 最終的な処理の実行順
 
 ```mermaid
-
 flowchart TB
   A["Base Animation"]
   B["Rig Chain - Constraints / IK"]
@@ -83,7 +81,6 @@ flowchart TB
   A -->|"現状のアニメーションなどが適用された状態の入力"| B
   B --> C
   C --> D
-
 ```
 
 
