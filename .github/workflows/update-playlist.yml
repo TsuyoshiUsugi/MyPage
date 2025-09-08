@@ -128,10 +128,16 @@ jobs:
       - name: Check for changes
         id: verify-changed-files
         run: |
-          if [ -n "$(git status --porcelain)" ]; then
+          # Clean up temporary script file first
+          rm -f update-playlist.mjs
+          
+          # Check only for playlist.json changes
+          if [ -n "$(git status --porcelain public/data/playlist.json)" ]; then
             echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Playlist data has changed"
           else
             echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes in playlist data"
           fi
       
       - name: Set branch name
@@ -150,9 +156,6 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git checkout -b ${{ steps.set-branch-name.outputs.branch_name }}
-          
-          # Clean up temporary script file
-          rm -f update-playlist.mjs
           
           # Commit changes
           git add public/data/playlist.json
