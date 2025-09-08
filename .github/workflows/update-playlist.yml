@@ -151,6 +151,9 @@ jobs:
           git config --local user.name "GitHub Action"
           git checkout -b ${{ steps.set-branch-name.outputs.branch_name }}
           
+          # Clean up temporary script file
+          rm -f update-playlist.mjs
+          
           # Commit changes
           git add public/data/playlist.json
           git commit -m "Update YouTube playlist data [automated]"
