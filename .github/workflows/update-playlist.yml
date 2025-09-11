@@ -59,8 +59,22 @@ jobs:
                 process.exit(1);
               }
               
-              // 動画IDを取得
-              const videoIds = data.items.map(item => item.snippet.resourceId.videoId);
+              if (!data.items || data.items.length === 0) {
+                console.log('No items found in playlist');
+                process.exit(0);
+              }
+              
+              console.log('Raw API response items:', JSON.stringify(data.items, null, 2));
+              
+              // 動画IDを取得（nullチェック付き）
+              const videoIds = data.items
+                .filter(item => item && item.snippet && item.snippet.resourceId && item.snippet.resourceId.videoId)
+                .map(item => item.snippet.resourceId.videoId);
+              
+              if (videoIds.length === 0) {
+                console.log('No valid video IDs found in playlist items');
+                process.exit(0);
+              }
               
               // 各動画の詳細情報を取得（実際のチャンネル名のため）
               console.log('Fetching video details for actual channel names...');
@@ -73,15 +87,36 @@ jobs:
                 process.exit(1);
               }
               
+              if (!videoDetailsData.items) {
+                console.log('No video details found');
+                videoDetailsData.items = [];
+              }
+              
               // プレイリストアイテムと動画詳細をマージ
-              const playlistItems = data.items.map(item => {
+              const playlistItems = data.items.filter(item => {
+                // 無効なアイテムをフィルタリング
+                return item && item.snippet && item.snippet.resourceId && item.snippet.resourceId.videoId;
+              }).map(item => {
                 const videoDetail = videoDetailsData.items.find(video => video.id === item.snippet.resourceId.videoId);
+                
+                // サムネイルURLを安全に取得
+                let thumbnailUrl = '';
+                if (item.snippet.thumbnails) {
+                  if (item.snippet.thumbnails.medium && item.snippet.thumbnails.medium.url) {
+                    thumbnailUrl = item.snippet.thumbnails.medium.url;
+                  } else if (item.snippet.thumbnails.high && item.snippet.thumbnails.high.url) {
+                    thumbnailUrl = item.snippet.thumbnails.high.url;
+                  } else if (item.snippet.thumbnails.default && item.snippet.thumbnails.default.url) {
+                    thumbnailUrl = item.snippet.thumbnails.default.url;
+                  }
+                }
+                
                 return {
                   id: item.id,
-                  title: item.snippet.title,
-                  channelTitle: videoDetail ? videoDetail.snippet.channelTitle : item.snippet.channelTitle, // 実際のチャンネル名を使用
-                  thumbnail: item.snippet.thumbnails.medium.url,
-                  publishedAt: item.snippet.publishedAt,
+                  title: item.snippet.title || 'Unknown Title',
+                  channelTitle: videoDetail ? videoDetail.snippet.channelTitle : (item.snippet.channelTitle || 'Unknown Channel'),
+                  thumbnail: thumbnailUrl,
+                  publishedAt: item.snippet.publishedAt || new Date().toISOString(),
                   videoId: item.snippet.resourceId.videoId
                 };
               });
