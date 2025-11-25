@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import mermaid from 'astro-mermaid';
+import remarkBreaks from 'remark-breaks';
 
 export default defineConfig({
   site: 'https://morumoru.jp',
@@ -8,10 +9,17 @@ export default defineConfig({
   output: 'static',
   integrations: [mdx(), mermaid()],
   markdown: {
-    // MDファイルでもコンポーネントが使えるように
+    remarkPlugins: [remarkBreaks],
     extendDefaultPlugins: true,
   },
   build: {
     assets: 'assets'
+  },
+  vite: {
+    server: {
+      watch: {
+        usePolling: true,
+      }
+    }
   }
 });

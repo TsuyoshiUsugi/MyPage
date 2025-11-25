@@ -24,7 +24,8 @@
       "Bash(npm i:*)",
       "Bash(npm search:*)",
       "Bash(gh workflow run:*)",
-      "Bash(gh pr create:*)"
+      "Bash(gh pr create:*)",
+      "Bash(npm run preview:*)"
     ],
     "deny": [
       "Bash(sudo:*)",
