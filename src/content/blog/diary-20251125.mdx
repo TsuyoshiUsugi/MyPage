@@ -1,0 +1,75 @@
+---
+title: "ライトマップの基礎について学ぶ～Unity Learning Materials #1～"
+description: "Unity Learning Materialsのライティング動画で学んだことをまとめました。"
+pubDate: 2025-11-25
+priority: 0
+tags: ["記事", "Unity"]
+ogImage: ""
+---
+
+import LinkCard from '../../components/LinkCard.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+
+# はじめに
+---
+Unity Learning Materials#1の動画を見て学んだことをアウトプットしたいと思い記事にしました。
+<VideoEmbed src="https://youtu.be/sA7AQPbXdZ4" title="Unity Learning Materials #1" />
+
+# URP(Universal Render Pipeline)とは？
+---
+SRP(スクリプタブルレンダーパイプライン)の一種。ユーザーがC#スクリプトとシェーダーでカスタマイズできる描画パイプラインの事。
+それまでのBuilt-in Render Pipelineはカスタマイズできず無駄が多かったためこのような形になった。
+Unity6時点ではBuilt-inはプロジェクト作成時のテンプレートの一番下にひっそりと存在している。
+
+# Universal Render Pipeline Asset
+---
+ライティングの設定ができる。以下が動画で紹介されていた内容。
+
+## Lighting
+---
+![URP Asset設定画面](/images/diary-20251125/URPAsset全体画像.png)
+**・MainLight**
+
+リアルタイムライティングを設定できる。ProjectSettings/Graphics/の一番上にある。
+なぜかUnity6ではアイコンが変わっている。
+無効にすると影がきえる。有効にするとピクセルごとに影ができる。
+ここで行っていることは
+1.カメラに設定した影のテクスチャを割り当てる。例：2048×2048
+2.一つ一つのピクセルに対してジオメトリを計算し影を割り当てる。
+これをShadow Mapという。解像度を上げると影がはっきりと映るようになる。割り当てるテクスチャは開発環境に合わせる。
+
+**・Shadow Resolution**
+影の解像度を設定できる。
+
+**・AdditionalLight**
+Mainのライト以外の設定ができる(SpotLightなど)。例えば単なる懐中電灯のようなライトなら解像度は低くてもいい。
+
+## Shadow
+---
+
+**・Distance**
+設定した距離に応じて影を描画するかしないかを決められる。距離を延ばすほど全体の解像度が落ちるので注意。
+
+**・Cascades**
+これを使用しない場合すべての距離で共通の解像度で影を計算する。設定すると距離ごとに応じて解像度を下げられる。
+
+**・DepthBiasとNormalBias**
+これらは[シャドウアクネ](https://scrapbox.io/ure/%E3%82%B7%E3%83%A3%E3%83%89%E3%82%A6%E3%82%A2%E3%82%AF%E3%83%8D)という現象に対応するためのもの。
+これらの値は実際にプレイヤーの目線に立って目で調整していくのが良い。
+
+# URPでのReal-time lighting
+---
+
+**・Real-time lightingとReal-time shadowsが使えるライトの表**
+
+| Lightの種類 | Real-time lighting | Real-time shadows |
+| ----------- | :----------------: | :---------------: |
+| Directional light | 〇 | 〇 |
+| Spotlights | 〇 | 〇 |
+| Point light | 〇 | × |
+| Arealight | 〇 | × |
+
+※ただしDifferdレンダラーが使えるならPointlightもReal-time shadowsも使える
+
+# 終わりに
+---
