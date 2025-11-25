@@ -17,21 +17,21 @@ Unity Learning Materials#1の動画を見て学んだことをアウトプット
 
 # URP(Universal Render Pipeline)とは？
 ---
-SRP(スクリプタブルレンダーパイプライン)の一種。ユーザーがC#スクリプトとシェーダーでカスタマイズできる描画パイプラインの事。
+SRP(スクリプタブルレンダーパイプライン)の一種。
+ユーザーがC#スクリプトとシェーダーでカスタマイズできる描画パイプラインの事。
 それまでのBuilt-in Render Pipelineはカスタマイズできず無駄が多かったためこのような形になった。
-Unity6時点ではBuilt-inはプロジェクト作成時のテンプレートの一番下にひっそりと存在している。
+※Unity6時点ではBuilt-inはプロジェクト作成時のテンプレートの一番下にひっそりと存在している。
 
 # Universal Render Pipeline Asset
 ---
+![URP Asset設定画面](/images/diary-20251125/URPAsset全体画像.png)
 ライティングの設定ができる。以下が動画で紹介されていた内容。
 
 ## Lighting
 ---
-![URP Asset設定画面](/images/diary-20251125/URPAsset全体画像.png)
+![Lightingの画像](/images/diary-20251125/Lightingの画像.png)
 **・MainLight**
-
-リアルタイムライティングを設定できる。ProjectSettings/Graphics/の一番上にある。
-なぜかUnity6ではアイコンが変わっている。
+リアルタイムライティングを設定できる。ProjectSettings/Graphics/の一番上にある(なぜかUnity6ではアイコンが変わっている)。
 無効にすると影がきえる。有効にするとピクセルごとに影ができる。
 ここで行っていることは
 1.カメラに設定した影のテクスチャを割り当てる。例：2048×2048
@@ -46,7 +46,7 @@ Mainのライト以外の設定ができる(SpotLightなど)。例えば単な�
 
 ## Shadow
 ---
-
+![shadowの画像](/images/diary-20251125/shadowの画像.png)
 **・Distance**
 設定した距離に応じて影を描画するかしないかを決められる。距離を延ばすほど全体の解像度が落ちるので注意。
 
@@ -56,6 +56,7 @@ Mainのライト以外の設定ができる(SpotLightなど)。例えば単な�
 **・DepthBiasとNormalBias**
 これらは[シャドウアクネ](https://scrapbox.io/ure/%E3%82%B7%E3%83%A3%E3%83%89%E3%82%A6%E3%82%A2%E3%82%AF%E3%83%8D)という現象に対応するためのもの。
 これらの値は実際にプレイヤーの目線に立って目で調整していくのが良い。
+余談だが実際にUnity6で検証したところこれは起きなかった。
 
 # URPでのReal-time lighting
 ---
@@ -67,9 +68,11 @@ Mainのライト以外の設定ができる(SpotLightなど)。例えば単な�
 | Directional light | 〇 | 〇 |
 | Spotlights | 〇 | 〇 |
 | Point light | 〇 | × |
-| Arealight | 〇 | × |
+| Arealight | × | × |
 
 ※ただしDifferdレンダラーが使えるならPointlightもReal-time shadowsも使える
 
 # 終わりに
 ---
+今回はほとんど基礎的なLightingの設定に関してのお話だったので特に引っかかることはありませんでした。
+ただシャドウアクネという現象と起こる理由、その対応に関してはへぇ～と思ったので知れることが出来て良かったです。
